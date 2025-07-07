@@ -1,165 +1,268 @@
 "use client";
-import { useState, Dispatch, SetStateAction } from "react";
-import { X, Filter } from "lucide-react";
 
-type FiltersState = {
-    search: string;
-    category: string;
-    level: string;
-    outcome: string;
-};
+import { useState } from "react";
+import { Search, Filter, Calendar, MapPin, User, Star } from "lucide-react";
+import Link from "next/link";
 
-type SidebarProps = {
-    filters: FiltersState;
-    setFilters: Dispatch<SetStateAction<FiltersState>>;
-};
+const mockExperiences = [
+    {
+        id: 1,
+        title: "UPSC CSE 2023 Interview Experience - IAS Officer Selection",
+        author: "Rahul Sharma",
+        examType: "UPSC Civil Services",
+        year: 2023,
+        location: "New Delhi",
+        rating: 4.8,
+        summary: "Detailed experience of UPSC CSE 2023 interview including board questions, personality test, and preparation tips.",
+        tags: ["UPSC", "Civil Services", "Personality Test", "Board Interview"],
+        readTime: "8 min read",
+        date: "2024-01-15"
+    },
+    {
+        id: 2,
+        title: "SSB Interview Experience - Army Technical Entry Scheme",
+        author: "Priya Patel",
+        examType: "SSB Interview",
+        year: 2023,
+        location: "Bhopal",
+        rating: 4.6,
+        summary: "Complete SSB interview experience including psychological tests, group tasks, and personal interview.",
+        tags: ["SSB", "Army", "Technical Entry", "Group Tasks"],
+        readTime: "12 min read",
+        date: "2024-01-10"
+    },
+    {
+        id: 3,
+        title: "SBI PO Interview Experience - Final Round Selection",
+        author: "Amit Kumar",
+        examType: "Banking & Finance",
+        year: 2023,
+        location: "Mumbai",
+        rating: 4.4,
+        summary: "SBI PO interview experience with detailed questions, GD topics, and preparation strategy.",
+        tags: ["SBI", "Banking", "PO", "Group Discussion"],
+        readTime: "6 min read",
+        date: "2024-01-08"
+    },
+    {
+        id: 4,
+        title: "IES Interview Experience - Electrical Engineering Services",
+        author: "Deepak Verma",
+        examType: "Engineering Services",
+        year: 2023,
+        location: "Delhi",
+        rating: 4.7,
+        summary: "IES interview experience for electrical engineering with technical questions and interview tips.",
+        tags: ["IES", "Engineering", "Electrical", "Technical"],
+        readTime: "10 min read",
+        date: "2024-01-05"
+    },
+    {
+        id: 5,
+        title: "UPSC CSE 2022 Interview - Optional Subject Strategy",
+        author: "Meera Singh",
+        examType: "UPSC Civil Services",
+        year: 2022,
+        location: "New Delhi",
+        rating: 4.9,
+        summary: "UPSC interview experience focusing on optional subject preparation and board interaction.",
+        tags: ["UPSC", "Optional Subject", "Strategy", "Preparation"],
+        readTime: "9 min read",
+        date: "2024-01-03"
+    },
+    {
+        id: 6,
+        title: "SSB Interview - Air Force Flying Branch",
+        author: "Vikram Singh",
+        examType: "SSB Interview",
+        year: 2023,
+        location: "Varanasi",
+        rating: 4.5,
+        summary: "Air Force SSB interview experience including pilot aptitude test and medical examination.",
+        tags: ["Air Force", "Flying", "Pilot", "Aptitude Test"],
+        readTime: "15 min read",
+        date: "2024-01-01"
+    }
+];
+
+const examCategories = [
+    "All Categories",
+    "UPSC Civil Services",
+    "SSB Interview", 
+    "Banking & Finance",
+    "Engineering Services",
+    "Police & Defense",
+    "Academic & Research"
+];
 
 export default function BrowsePage() {
-    const [filters, setFilters] = useState<FiltersState>({
-        search: "",
-        category: "All",
-        level: "All",
-        outcome: "All",
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("All Categories");
+    const [selectedYear, setSelectedYear] = useState("All Years");
+
+    const filteredExperiences = mockExperiences.filter(experience => {
+        const matchesSearch = experience.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            experience.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            experience.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+        
+        const matchesCategory = selectedCategory === "All Categories" || experience.examType === selectedCategory;
+        const matchesYear = selectedYear === "All Years" || experience.year.toString() === selectedYear;
+        
+        return matchesSearch && matchesCategory && matchesYear;
     });
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const years = ["All Years", ...Array.from(new Set(mockExperiences.map(exp => exp.year.toString())))].sort((a, b) => b.localeCompare(a));
 
     return (
-        <main className="pt-16 bg-gray-900 min-h-screen text-gray-200">
-            {/* Mobile Filter Button */}
-            <div className="md:hidden px-4 py-4">
-                <button onClick={() => setSidebarOpen(true)} className="flex items-center gap-2 bg-gray-800 border border-gray-700 px-4 py-2 rounded-md">
-                    <Filter className="w-4 h-4" />
-                    <span>Filters</span>
-                </button>
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <div className="bg-white shadow-sm border-b">
+                <div className="max-w-7xl mx-auto px-4 py-8">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                        Browse Interview Experiences
+                    </h1>
+                    <p className="text-gray-600 text-lg">
+                        Discover real interview experiences from successful candidates across various competitive exams
+                    </p>
+                </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6">
-                {/* Desktop Sidebar */}
-                <aside className="hidden md:block space-y-6">
-                    <Sidebar filters={filters} setFilters={setFilters} />
-                </aside>
+            {/* Filters and Search */}
+            <div className="bg-white border-b">
+                <div className="max-w-7xl mx-auto px-4 py-6">
+                    <div className="flex flex-col lg:flex-row gap-4">
+                        {/* Search */}
+                        <div className="flex-1 relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <input
+                                type="text"
+                                placeholder="Search experiences, topics, or keywords..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                        </div>
 
-                {/* Mobile Sidebar */}
-                {sidebarOpen && (
-                    <>
-                        {/* Overlay */}
-                        <div className="fixed inset-0 bg-black bg-opacity-60 z-40" onClick={() => setSidebarOpen(false)}></div>
+                        {/* Category Filter */}
+                        <div className="relative">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                            >
+                                {examCategories.map(category => (
+                                    <option key={category} value={category}>{category}</option>
+                                ))}
+                            </select>
+                        </div>
 
-                        {/* Sidebar Panel */}
-                        <aside className="fixed top-0 left-0 bottom-0 w-64 bg-gray-900 border-r border-gray-700 p-6 z-50 space-y-6 overflow-y-auto">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg font-semibold">Filters</h2>
-                                <button onClick={() => setSidebarOpen(false)} className="text-gray-400 hover:text-gray-200">
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-                            <Sidebar filters={filters} setFilters={setFilters} />
-                        </aside>
-                    </>
-                )}
-
-                {/* Results */}
-                <section className="space-y-6">
-                    <div className="flex justify-between items-center border border-gray-700 p-4 rounded-md bg-gray-800">
-                        <p className="text-sm">Found 145 experiences</p>
-                        <select className="bg-gray-700 text-gray-200 px-3 py-2 rounded-md text-sm">
-                            <option>Sort by: Most Recent</option>
-                            <option>Most Helpful</option>
-                        </select>
+                        {/* Year Filter */}
+                        <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}
+                                className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                            >
+                                {years.map(year => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
+                </div>
+            </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {[...Array(6)].map((_, i) => (
-                            <div key={i} className="border border-gray-700 rounded-lg bg-gray-800 p-6 space-y-4">
-                                <div className="flex justify-between items-center">
-                                    <h2 className="text-lg font-semibold">{i % 2 === 0 ? "Software Engineer - Google" : "Product Manager - Microsoft"}</h2>
-                                    <span className={`text-xs font-semibold ${i % 2 === 0 ? "text-green-400" : "text-red-400"}`}>{i % 2 === 0 ? "✔ Selected" : "✗ Rejected"}</span>
+            {/* Results */}
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                        {filteredExperiences.length} Experience{filteredExperiences.length !== 1 ? 's' : ''} Found
+                    </h2>
+                    <div className="text-sm text-gray-500">
+                        Showing {filteredExperiences.length} of {mockExperiences.length} experiences
+                    </div>
+                </div>
+
+                {/* Experience Cards */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {filteredExperiences.map(experience => (
+                        <div key={experience.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                                        {experience.examType}
+                                    </span>
+                                    <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium rounded-full">
+                                        {experience.year}
+                                    </span>
                                 </div>
-                                <p className="text-gray-400 text-sm">{i % 2 === 0 ? "3 rounds • 2 days ago" : "4 rounds • 1 week ago"}</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {i % 2 === 0 ? (
-                                        <>
-                                            <span className="bg-gray-700 px-2 py-1 rounded text-xs">JavaScript</span>
-                                            <span className="bg-gray-700 px-2 py-1 rounded text-xs">System Design</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="bg-gray-700 px-2 py-1 rounded text-xs">Product Strategy</span>
-                                            <span className="bg-gray-700 px-2 py-1 rounded text-xs">Case Study</span>
-                                        </>
-                                    )}
+                                <div className="flex items-center gap-1">
+                                    <Star className="text-yellow-400" size={16} fill="currentColor" />
+                                    <span className="text-sm font-medium text-gray-700">{experience.rating}</span>
                                 </div>
-                                <p className="text-gray-300 text-sm">{i % 2 === 0 ? "The interview focused on data structures and system design." : "The case study round was challenging but insightful."}</p>
-                                <div className="flex justify-between items-center text-sm text-gray-400">
-                                    <div className="flex items-center gap-4">
-                                        <span>👍 {i % 2 === 0 ? "24 helpful" : "18 helpful"}</span>
-                                        <span>💬 {i % 2 === 0 ? "5 comments" : "12 comments"}</span>
+                            </div>
+
+                            <Link href={`/experience/${experience.id}`}>
+                                <h3 className="text-xl font-semibold text-gray-800 mb-3 hover:text-blue-600 cursor-pointer">
+                                    {experience.title}
+                                </h3>
+                            </Link>
+
+                            <p className="text-gray-600 mb-4 line-clamp-3">
+                                {experience.summary}
+                            </p>
+
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {experience.tags.slice(0, 3).map(tag => (
+                                    <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                        {tag}
+                                    </span>
+                                ))}
+                                {experience.tags.length > 3 && (
+                                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                        +{experience.tags.length - 3} more
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="flex justify-between items-center text-sm text-gray-500">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-1">
+                                        <User size={16} />
+                                        <span>{experience.author}</span>
                                     </div>
-                                    <a href="#" className="text-green-400 hover:underline font-medium">
-                                        Read More →
-                                    </a>
+                                    <div className="flex items-center gap-1">
+                                        <MapPin size={16} />
+                                        <span>{experience.location}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <span>{experience.readTime}</span>
+                                    <span>{new Date(experience.date).toLocaleDateString()}</span>
                                 </div>
                             </div>
-                        ))}
+
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                <Link href={`/experience/${experience.id}`} className="block w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-center">
+                                    Read Full Experience
+                                </Link>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {filteredExperiences.length === 0 && (
+                    <div className="text-center py-12">
+                        <div className="text-gray-400 mb-4">
+                            <Search size={64} className="mx-auto" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-600 mb-2">No experiences found</h3>
+                        <p className="text-gray-500">Try adjusting your search criteria or browse all experiences</p>
                     </div>
-                </section>
+                )}
             </div>
-        </main>
-    );
-}
-
-/**
- * Sidebar component
- */
-function Sidebar({ filters, setFilters }: SidebarProps) {
-    return (
-        <>
-            <div>
-                <label className="block text-sm font-medium mb-1">Search</label>
-                <input
-                    type="text"
-                    placeholder="Company, role, skills..."
-                    value={filters.search}
-                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-1">Category</label>
-                <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700">
-                    <option>All</option>
-                    <option>Engineering</option>
-                    <option>Design</option>
-                    <option>Finance</option>
-                    <option>Government</option>
-                </select>
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-1">Experience Level</label>
-                <select value={filters.level} onChange={(e) => setFilters({ ...filters, level: e.target.value })} className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700">
-                    <option>All</option>
-                    <option>Entry Level</option>
-                    <option>Mid Level</option>
-                    <option>Senior</option>
-                </select>
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-1">Interview Outcome</label>
-                <select value={filters.outcome} onChange={(e) => setFilters({ ...filters, outcome: e.target.value })} className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700">
-                    <option>All</option>
-                    <option>Selected</option>
-                    <option>Rejected</option>
-                    <option>Pending</option>
-                </select>
-            </div>
-
-            <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition mt-2" onClick={() => alert("Filters applied!")}>
-                Apply Filters
-            </button>
-        </>
+        </div>
     );
 }

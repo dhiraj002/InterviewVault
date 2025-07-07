@@ -34,6 +34,9 @@ export default function NavBar() {
                         <Link href="/Signin" className="hover:text-blue-600">
                             Sign In
                         </Link>
+                        <Link href="/signup" className="hover:text-blue-600">
+                            Sign Up
+                        </Link>
                     </div>
 
                     {/* Hamburger Button */}
@@ -60,6 +63,9 @@ export default function NavBar() {
                         </Link> */}
                         <Link href="/Signin" onClick={() => setMenuOpen(false)} className="hover:text-blue-600">
                             Sign In
+                        </Link>
+                        <Link href="/signup" onClick={() => setMenuOpen(false)} className="hover:text-blue-600">
+                            Sign Up
                         </Link>
                     </div>
                 </div>
