@@ -29,8 +29,12 @@ export default function NavBar() {
                     <Link href="/share-experience" className="text-gray-300 hover:text-blue-400 transition">
                         Share Experience
                     </Link>
-                    <Link href="/sign-in" className="text-gray-300 hover:text-blue-400 transition">
-                        Sign In
+                    <Link href="/signup" className="text-gray-300 hover:text-blue-400 transition">
+                        Sign Up
+                    </Link>
+
+                    <Link href="/login" className="text-gray-300 hover:text-blue-400 transition">
+                        Log In
                     </Link>
                 </div>
 
@@ -52,8 +56,13 @@ export default function NavBar() {
                     <Link href="/share-experience" onClick={closeMenu} className="block text-gray-300 hover:text-blue-400 px-2 py-2">
                         Share Experience
                     </Link>
-                    <Link href="/sign-in" onClick={closeMenu} className="block text-gray-300 hover:text-blue-400 px-2 py-2">
-                        Sign In
+
+                    <Link href="/signup" onClick={closeMenu} className="block text-gray-300 hover:text-blue-400 px-2 py-2">
+                        Sign Up
+                    </Link>
+
+                    <Link href="/login" onClick={closeMenu} className="block text-gray-300 hover:text-blue-400 px-2 py-2">
+                        Log In
                     </Link>
                 </div>
             )}
