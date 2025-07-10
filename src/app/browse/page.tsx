@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Browse() {
     return (
         <main className="bg-[#0d1117] min-h-screen py-12 px-4 text-gray-200">
@@ -62,9 +64,9 @@ export default function Browse() {
                                 <p className="text-sm mb-4">The interview focused on data structures and system design.</p>
                                 <div className="flex justify-between items-center text-xs text-gray-400">
                                     <span>👍 24 helpful</span>
-                                    <a href="#" className="text-blue-400 hover:underline">
+                                    <Link href="#" className="text-blue-400 hover:underline">
                                         Read More →
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         ))}
