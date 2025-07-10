@@ -45,9 +45,9 @@ export default function Footer() {
                         Have questions or feedback?
                         <br />
                         Email us at{" "}
-                        <a href="mailto:support@interviewvault.com" className="text-blue-400 hover:underline">
+                        <Link href="mailto:support@interviewvault.com" className="text-blue-400 hover:underline">
                             support@interviewvault.com
-                        </a>
+                        </Link>
                     </p>
                     <div className="flex space-x-4 mt-4">
                         <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
