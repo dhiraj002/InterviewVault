@@ -26,8 +26,8 @@ export default function Footer() {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/submit" className="text-gray-400 hover:text-blue-400 transition">
-                                Submit Your Story
+                            <Link href="/share-experience" className="text-gray-400 hover:text-blue-400 transition">
+                                Share Experience
                             </Link>
                         </li>
                         <li>
@@ -50,15 +50,15 @@ export default function Footer() {
                         </a>
                     </p>
                     <div className="flex space-x-4 mt-4">
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
+                        <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
                             <FaTwitter className="w-5 h-5" />
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
+                        </Link>
+                        <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
                             <FaLinkedin className="w-5 h-5" />
-                        </a>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
+                        </Link>
+                        <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition">
                             <FaGithub className="w-5 h-5" />
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
