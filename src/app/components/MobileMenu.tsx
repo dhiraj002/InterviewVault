@@ -37,9 +37,9 @@ export default function MobileMenu({ isLoggedIn }: Props) {
                             </div>
                         ) : (
                             <>
-                                <Link href="/signup" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
+                                {/* <Link href="/signup" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
                                     Sign Up
-                                </Link>
+                                </Link> */}
                                 <Link href="/login" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
                                     Log In
                                 </Link>

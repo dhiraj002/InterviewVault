@@ -1,7 +1,10 @@
+//
+
 "use client";
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 
 export default function LogoutButton() {
@@ -9,21 +12,18 @@ export default function LogoutButton() {
     const [isPending, startTransition] = useTransition();
 
     const handleLogout = async () => {
-        const res = await fetch("/api/logout", { method: "POST" });
-
-        if (res.ok) {
-            toast.success("👋 Logged out");
-
-            router.push("/"); // Optional: redirect to home
-            router.refresh(); // Refresh NavBar or any server component
-            startTransition(() => {});
-        } else {
-            toast.error("Logout failed");
-        }
+        startTransition(async () => {
+            try {
+                await signOut({ callbackUrl: "/" });
+                toast.success("👋 Logged out successfully!");
+            } catch (error) {
+                toast.error("❌ Logout failed");
+            }
+        });
     };
 
     return (
-        <button onClick={handleLogout} disabled={isPending} className="text-white-500 hover:text-red-500 font-semibold transition">
+        <button onClick={handleLogout} disabled={isPending} className="text-white hover:text-red-500 font-medium transition">
             {isPending ? "Logging out..." : "Logout"}
         </button>
     );

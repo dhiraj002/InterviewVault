@@ -21,9 +21,9 @@ export default function NavLinks({ isLoggedIn }: Props) {
                 </div>
             ) : (
                 <>
-                    <Link href="/signup" className="text-gray-300 hover:text-blue-400">
+                    {/* <Link href="/signup" className="text-gray-300 hover:text-blue-400">
                         Sign Up
-                    </Link>
+                    </Link> */}
                     <Link href="/login" className="text-gray-300 hover:text-blue-400">
                         Log In
                     </Link>

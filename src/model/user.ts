@@ -3,14 +3,16 @@ import mongoose, { Document, Schema } from "mongoose";
 // TypeScript interface
 export interface IUser extends Document {
     firstName: string;
-    lastName: string;
+    lastName?: string;
     email: string;
-    password: string;
+    password?: string;
+
     createdAt?: Date;
+    updatedAt?: Date;
 }
 
 // Mongoose Schema
-const UserSchema: Schema = new Schema<IUser>(
+const UserSchema: Schema<IUser> = new Schema(
     {
         firstName: {
             type: String,
@@ -19,25 +21,25 @@ const UserSchema: Schema = new Schema<IUser>(
         },
         lastName: {
             type: String,
-            required: true,
             trim: true,
+            required: false,
         },
         email: {
             type: String,
-            required: true,
+            required: [true, "Email is required"],
             unique: true,
             lowercase: true,
             trim: true,
         },
         password: {
             type: String,
-            required: true,
-            minlength: 6,
+            required: false, // Optional for OAuth users
+            select: false, // Don't return password in queries
         },
     },
     { timestamps: true }
 );
 
-// Prevent re-declaration during dev
+// Prevent model overwrite during dev
 const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 export default User;
