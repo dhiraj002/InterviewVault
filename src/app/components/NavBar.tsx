@@ -1,14 +1,11 @@
 import NavLinks from "./NavLinks";
 import MobileMenu from "./MobileMenu";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../../lib/authOptions";
 import Link from "next/link";
 
 export default async function NavBar() {
-    // const isLoggedIn = await isUserLoggedIn();
-    // console.log(isLoggedIn);
     const session = await getServerSession(authOptions);
-
     const isLoggedIn = !!session?.user;
 
     return (
