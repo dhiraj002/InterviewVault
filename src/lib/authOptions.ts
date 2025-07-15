@@ -21,13 +21,25 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user }) {
-            if (user) token.id = user.id;
+            // if (user) token.id = user.id;
+
+            await connectDb();
+
+            if (user?.email) {
+                const fetchedUser = await UserModel.findOne({ email: user.email });
+
+                if (fetchedUser) {
+                    token.id = fetchedUser._id.toString(); // ✅ Store MongoDB user ID
+                }
+            }
+
             return token;
         },
-        async session({ session, token }) {
-            if (session.user && token.id) {
-                (session.user as any).id = token.id;
-            }
+        async session({ session }) {
+            // if (session.user && token.id) {
+            //     // (session.user as any).id = token.id;
+            //     session.user.id = token.id; // ✅ Attach user ID to session
+            // }
             return session;
         },
         async signIn({ profile }) {
