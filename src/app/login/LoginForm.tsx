@@ -96,21 +96,21 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
 export default function LoginForm() {
     const [isLoading, setIsLoading] = useState(false);
-    const searchParams = useSearchParams();
-    const from = searchParams.get("from") || "/";
+    // const searchParams = useSearchParams();
+    // const from = searchParams.get("from") || "/";
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         try {
             await signIn("google", { callbackUrl: "/share-experience" });
-        } catch (error) {
+        } catch {
             toast.error("🚫 Google sign-in failed.");
         } finally {
             setIsLoading(false);

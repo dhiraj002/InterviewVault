@@ -2,13 +2,11 @@
 
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 
 export default function LogoutButton() {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
     const handleLogout = async () => {
@@ -16,7 +14,7 @@ export default function LogoutButton() {
             try {
                 await signOut({ callbackUrl: "/" });
                 toast.success("👋 Logged out successfully!");
-            } catch (error) {
+            } catch {
                 toast.error("❌ Logout failed");
             }
         });

@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
             if (user) token.id = user.id;
             return token;
         },
-        async session({ session, token }) {
+        async session({ session }) {
             return session;
         },
         async signIn({ profile }) {
