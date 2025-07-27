@@ -35,11 +35,11 @@ export const authOptions: AuthOptions = {
 
             return token;
         },
-        async session({ session }) {
-            // if (session.user && token.id) {
-            //     // (session.user as any).id = token.id;
-            //     session.user.id = token.id; // ✅ Attach user ID to session
-            // }
+
+        async session({ session, token }) {
+            if (session.user && token.id) {
+                session.user.id = token.id as string; // ✅ Attach user ID to session
+            }
             return session;
         },
         async signIn({ profile }) {

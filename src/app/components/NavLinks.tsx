@@ -16,9 +16,14 @@ export default function NavLinks({ isLoggedIn }: Props) {
             </Link>
 
             {isLoggedIn ? (
-                <div className="text-gray-300">
-                    <LogoutButton />
-                </div>
+                <>
+                    <Link href="/dashboard" className="text-gray-300 hover:text-blue-400">
+                        Dashboard
+                    </Link>
+                    <div className="text-gray-300">
+                        <LogoutButton />
+                    </div>
+                </>
             ) : (
                 <>
                     {/* <Link href="/signup" className="text-gray-300 hover:text-blue-400">

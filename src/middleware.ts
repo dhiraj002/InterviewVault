@@ -1,46 +1,29 @@
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// export function middleware(request: NextRequest) {
-//     const token = request.cookies.get("token")?.value;
-
-//     // If user is not logged in and trying to access a protected route
-//     if (!token && request.nextUrl.pathname.startsWith("/share-experience")) {
-//         const loginUrl = new URL("/login", request.url);
-//         loginUrl.searchParams.set("from", request.nextUrl.pathname);
-//         return NextResponse.redirect(loginUrl);
-//     }
-
-//     // Allow request to continue
-//     return NextResponse.next();
-// }
-// export const config = {
-//     matcher: [
-//         // Apply middleware to all routes except public ones
-//         "/share-experience/:path*",
-//     ],
-// };
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-    // Read NextAuth session cookie
-    const token = request.cookies.get("next-auth.session-token")?.value || request.cookies.get("__Secure-next-auth.session-token")?.value;
+    const { pathname } = request.nextUrl;
 
-    const protectedRoutes = ["/share-experience"];
-    const isProtected = protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
+    // Retrieve token from either secure or default cookie
+    const token = request.cookies.get("next-auth.session-token")?.value ?? request.cookies.get("__Secure-next-auth.session-token")?.value;
 
-    // Redirect if unauthenticated and accessing protected route
-    if (!token && isProtected) {
+    // Define protected routes
+    const protectedRoutes = ["/share-experience", "/dashboard"];
+
+    // Check if current route is protected
+    const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
+    // If user is not authenticated and accessing protected route, redirect to login
+    if (!token && isProtectedRoute) {
         const loginUrl = new URL("/login", request.url);
-        loginUrl.searchParams.set("from", request.nextUrl.pathname);
+        loginUrl.searchParams.set("from", pathname); // optional: support redirect after login
         return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();
 }
 
+// Middleware applies only to selected routes (can be expanded later)
 export const config = {
-    matcher: ["/share-experience/:path*"],
+    matcher: ["/share-experience/:path*", "/dashboard/:path*"], // include dashboard as well
 };

@@ -32,9 +32,14 @@ export default function MobileMenu({ isLoggedIn }: Props) {
                             Share Experience
                         </Link>
                         {isLoggedIn ? (
-                            <div className="px-4 py-3 text-sm text-white" onClick={() => setOpen(false)}>
-                                <LogoutButton />
-                            </div>
+                            <>
+                                <Link href="/dashboard" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
+                                    Dashboard
+                                </Link>
+                                <div className="px-4 py-3 text-sm text-white" onClick={() => setOpen(false)}>
+                                    <LogoutButton />
+                                </div>
+                            </>
                         ) : (
                             <>
                                 {/* <Link href="/signup" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
