@@ -4,14 +4,14 @@ export const dummyFormData: FormData = {
     // Interview Category
     interviewCategory: "Corporate",
     examType: "Online Assessment",
-    industryType: "Information Technology",
+    industryType: "technology",
 
     // Basic Information
     company: "TechNova Solutions",
     position: "Frontend Developer",
     location: "Bangalore",
     interviewDate: "2025-06-12",
-    applicationSource: "LinkedIn",
+    applicationSource: "on-campus",
     salaryRange: "6-8 LPA",
     examName: "TechNova Aptitude & Coding Test",
     postAppliedFor: "Software Engineer - Frontend",
