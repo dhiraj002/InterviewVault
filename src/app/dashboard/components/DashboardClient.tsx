@@ -10,8 +10,6 @@ import { Table } from "./Table";
 
 import { useRouter } from "next/navigation";
 
-// import { EditDialog } from "@/components/dashboard/edit-dialog";
-
 interface Props {
     initialItems: Interview[];
 }
@@ -21,22 +19,12 @@ export default function DashboardClient({ initialItems }: Props) {
     const router = useRouter();
 
     const { items, search, setSearch, filter, setFilter, counts, deleteItem } = useInterviews({ initialItems });
-    //updateItem
-
-    // const [editItem, setEditItem] = useState<Interview | null>(null);
-    // const [showEdit, setShowEdit] = useState(false);
 
     const handleEdit = (item: Interview) => {
-        // setEditItem(item);
-        // setShowEdit(true);
-        console.log("Edit item:", item);
+        if (item.id) {
+            router.push(`/share-experience/${item.id}`);
+        }
     };
-
-    // const handleSave = (id: string, updates: Partial<Interview>) => {
-    //     updateItem(id, updates);
-    //     // setShowEdit(false);
-    //     // setEditItem(null);
-    // };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -72,9 +60,6 @@ export default function DashboardClient({ initialItems }: Props) {
 
                 {/* Table */}
                 <Table items={items} onEdit={handleEdit} onDelete={deleteItem} searchQuery={search} />
-
-                {/* Edit Dialog */}
-                {/* <EditDialog interview={editItem} open={showEdit} onClose={() => setShowEdit(false)} onSave={handleSave} /> */}
             </div>
         </div>
     );

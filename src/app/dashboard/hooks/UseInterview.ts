@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Interview, FilterStatus } from "@/types/interview";
+import { toast } from "react-hot-toast";
 // import { interviews as initialData } from "../data/data";
 
 export function useInterviews({ initialItems }: { initialItems: Interview[] }) {
@@ -32,12 +33,28 @@ export function useInterviews({ initialItems }: { initialItems: Interview[] }) {
         }, base);
     }, [data]);
 
-    const deleteItem = (id: string) => {
-        setData((prev) => prev.filter((item) => item.id !== id));
-    };
+    const deleteItem = async (id: string) => {
+        //
 
-    const updateItem = (id: string, updates: Partial<Interview>) => {
-        setData((prev) => prev.map((item) => (item.id === id ? { ...item, ...updates } : item)));
+        try {
+            const res = await fetch(`/api/share-experience/${id}`, {
+                method: "DELETE",
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) throw new Error(result.message);
+            setData((prev) => prev.filter((item) => item.id !== id));
+            toast.success(" Experience deleted successfully!");
+
+            // Optional: Refresh data or route
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                toast.error(err.message);
+            } else {
+                toast.error("Something went wrong");
+            }
+        }
     };
 
     return {
@@ -48,6 +65,5 @@ export function useInterviews({ initialItems }: { initialItems: Interview[] }) {
         setFilter,
         counts,
         deleteItem,
-        updateItem,
     };
 }
