@@ -30,7 +30,7 @@ export function InputField({ label, type = "text", value, onChange, placeholder,
                 max={max}
                 className={`w-full px-4 py-3 bg-gray-700 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 transition-all duration-200 ${error ? "border-red-500" : "border-gray-600"}`}
             />
-            {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+            {error && <p className="mt-1 text-sm text-red-400 error">{error}</p>}
         </div>
     );
 }

@@ -18,7 +18,7 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
 
     const formatOptions = [
         { value: "in-person", label: "In-person / F2F", icon: User },
-        { value: "video-call", label: "Video Call / Online", icon: Video },
+        { value: "virtual", label: "Video Call / Online", icon: Video },
         { value: "phone-call", label: "Phone Call", icon: Phone },
         { value: "mixed", label: "Mixed", icon: UserCheck },
     ];
@@ -80,8 +80,23 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
 
             <RadioGroup label={isCompetitiveExam ? "Test Format" : "Interview Format"} options={formatOptions} value={formData.interviewFormat} onChange={(value) => updateFormData("interviewFormat", value)} error={errors.interviewFormat} required />
 
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField label="Number of Rounds" type="number" value={formData.interviewRounds.toString()} onChange={(value) => updateFormData("interviewRounds", parseInt(value) || 1)} min={1} max={7} error={errors.interviewRounds} required /> */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField label="Number of Rounds" type="number" value={formData.interviewRounds.toString()} onChange={(value) => updateFormData("interviewRounds", parseInt(value) || 1)} min={1} max={7} error={errors.interviewRounds} required />
+                <InputField
+                    label="Number of Rounds"
+                    type="number"
+                    value={formData.interviewRounds.toString()}
+                    onChange={(value) => {
+                        const parsed = parseInt(value);
+                        updateFormData("interviewRounds", isNaN(parsed) ? 1 : parsed);
+                    }}
+                    min={1}
+                    max={7}
+                    error={errors.interviewRounds}
+                    required
+                />
 
                 <InputField
                     label="Total Duration"

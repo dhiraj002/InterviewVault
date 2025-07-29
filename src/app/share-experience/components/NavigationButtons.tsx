@@ -7,9 +7,10 @@ interface NavigationButtonsProps {
     onPrev: () => void;
     onSubmit: () => void;
     isSubmitting: boolean;
+    isEdit?: boolean; // Optional prop to indicate if it's an edit mode
 }
 
-export function NavigationButtons({ currentStep, totalSteps, onNext, onPrev, onSubmit, isSubmitting }: NavigationButtonsProps) {
+export function NavigationButtons({ currentStep, totalSteps, onNext, onPrev, onSubmit, isSubmitting, isEdit }: NavigationButtonsProps) {
     return (
         <div className="flex justify-between items-center gap-4">
             <button
@@ -45,10 +46,24 @@ export function NavigationButtons({ currentStep, totalSteps, onNext, onPrev, onS
                     }`}
                 >
                     {isSubmitting ? (
+                        isEdit ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                <span className="hidden sm:inline">Updating...</span>
+                                <span className="sm:hidden">Update...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                <span className="hidden sm:inline">Submitting...</span>
+                                <span className="sm:hidden">Submit...</span>
+                            </>
+                        )
+                    ) : isEdit ? (
                         <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            <span className="hidden sm:inline">Submitting...</span>
-                            <span className="sm:hidden">Submit...</span>
+                            <Send className="w-4 h-4 mr-2" />
+                            <span className="hidden sm:inline">Update Experience</span>
+                            <span className="sm:hidden">Update</span>
                         </>
                     ) : (
                         <>

@@ -6,6 +6,14 @@ import { authOptions } from "../../lib/authOptions";
 export default async function Home() {
     const session = await getServerSession(authOptions);
 
+    if (!session) {
+        return (
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+                <p className="text-white">You must be logged in to view this page.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-900 overflow-x-hidden">
             <Head>

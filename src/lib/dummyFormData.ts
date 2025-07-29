@@ -2,7 +2,7 @@ import { FormData } from "@/types/interview";
 
 export const dummyFormData: FormData = {
     // Interview Category
-    interviewCategory: "Corporate",
+    interviewCategory: "corporate",
     examType: "Online Assessment",
     industryType: "technology",
 
@@ -18,11 +18,11 @@ export const dummyFormData: FormData = {
     qualificationRequired: "B.Tech in Computer Science",
 
     // Interview Process
-    interviewFormat: "Virtual",
+    interviewFormat: "virtual",
     interviewRounds: 3,
     totalDuration: "2 hours",
     interviewers: "Tech Lead, HR Manager, Product Manager",
-    interviewTypes: ["Technical", "HR", "Managerial"],
+    interviewTypes: ["technical", "aptitude", "behavioral"],
     examStages: ["MCQ Aptitude", "Coding Round", "System Design"],
     writtenExamDetails: "MCQ on aptitude, logic, data structures, and algorithms.",
     rounds: [
@@ -89,7 +89,7 @@ export const dummyFormData: FormData = {
     wouldRecommend: true,
     additionalNotes: "Great experience, very organized and professional process.",
     outcome: "Selected",
-    feedbackReceived: "Very positive. Highlighted clear communication and depth.",
+    feedbackReceived: "excellent",
     resultDeclared: "2025-06-18",
     cutoffMarks: "80%",
     rankAchieved: "Top 5%",

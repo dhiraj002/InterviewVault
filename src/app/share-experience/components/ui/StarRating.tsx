@@ -23,7 +23,7 @@ export function StarRating({ label, value, onChange, error, required }: StarRati
                 ))}
                 <span className="ml-4 text-gray-300">{value > 0 ? `${value}/5` : "Select rating"}</span>
             </div>
-            {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+            {error && <p className="mt-1 text-sm text-red-400 error">{error}</p>}
         </div>
     );
 }

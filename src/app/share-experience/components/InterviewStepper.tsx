@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { StepIndicator } from "./StepIndicator";
 import { StepContent } from "./StepContent";
 import { NavigationButtons } from "./NavigationButtons";
@@ -23,86 +23,130 @@ const steps: Step[] = [
 
 interface InterviewStepperProps {
     session: Session | null;
+    initialExperience?: FormData;
+    isEdit?: boolean;
+    expId?: string;
 }
 
-export function InterviewStepper({ session }: InterviewStepperProps) {
+export function InterviewStepper({ session, initialExperience, isEdit, expId }: InterviewStepperProps) {
     const router = useRouter();
 
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<FormData>({
-        // Interview Category
-        interviewCategory: "",
-        examType: "",
-        industryType: "",
+    // const [formData, setFormData] = useState<FormData>({
+    //     // Interview Category
+    //     interviewCategory: "",
+    //     examType: "",
+    //     industryType: "",
 
-        // Basic Information
-        company: "",
-        position: "",
-        location: "",
-        interviewDate: "",
-        applicationSource: "",
-        salaryRange: "",
-        examName: "",
-        postAppliedFor: "",
-        qualificationRequired: "",
+    //     // Basic Information
+    //     company: "",
+    //     position: "",
+    //     location: "",
+    //     interviewDate: "",
+    //     applicationSource: "",
+    //     salaryRange: "",
+    //     examName: "",
+    //     postAppliedFor: "",
+    //     qualificationRequired: "",
 
-        // Interview Process
-        interviewFormat: "",
-        interviewRounds: 1,
-        totalDuration: "",
-        interviewers: "",
-        interviewTypes: [],
-        examStages: [],
-        writtenExamDetails: "",
+    //     // Interview Process
+    //     interviewFormat: "",
+    //     interviewRounds: 1,
+    //     totalDuration: "",
+    //     interviewers: "",
+    //     interviewTypes: [],
+    //     examStages: [],
+    //     writtenExamDetails: "",
 
-        // Experience Details
-        technicalQuestions: "",
-        behavioralQuestions: "",
-        generalKnowledgeQuestions: "",
-        subjectSpecificQuestions: "",
-        personalityTestDetails: "",
-        medicalTestDetails: "",
-        difficultyLevel: "",
-        preparation: "",
-        surprisingAspects: "",
-        studyMaterials: "",
-        coachingInstitute: "",
-        rounds: [],
+    //     // Experience Details
+    //     technicalQuestions: "",
+    //     behavioralQuestions: "",
+    //     generalKnowledgeQuestions: "",
+    //     subjectSpecificQuestions: "",
+    //     personalityTestDetails: "",
+    //     medicalTestDetails: "",
+    //     difficultyLevel: "",
+    //     preparation: "",
+    //     surprisingAspects: "",
+    //     studyMaterials: "",
+    //     coachingInstitute: "",
+    //     rounds: [],
 
-        // Assessment
-        overallRating: 0,
-        wouldRecommend: false,
-        additionalNotes: "",
-        outcome: "",
-        feedbackReceived: "",
-        resultDeclared: "",
-        cutoffMarks: "",
-        rankAchieved: "",
+    //     // Assessment
+    //     overallRating: 0,
+    //     wouldRecommend: false,
+    //     additionalNotes: "",
+    //     outcome: "",
+    //     feedbackReceived: "",
+    //     resultDeclared: "",
+    //     cutoffMarks: "",
+    //     rankAchieved: "",
 
-        // Contact
-        email: "",
-        name: "",
-        anonymous: true,
-        status: "Pending",
+    //     // Contact
+    //     email: "",
+    //     name: "",
+    //     anonymous: true,
+    //     status: "Pending",
+    // });
+
+    const [formData, setFormData] = useState<FormData>(() => {
+        return isEdit && initialExperience
+            ? initialExperience
+            : {
+                  interviewCategory: "",
+                  examType: "",
+                  industryType: "",
+                  company: "",
+                  position: "",
+                  location: "",
+                  interviewDate: "",
+                  applicationSource: "",
+                  salaryRange: "",
+                  examName: "",
+                  postAppliedFor: "",
+                  qualificationRequired: "",
+                  interviewFormat: "",
+                  interviewRounds: 1,
+                  totalDuration: "",
+                  interviewers: "",
+                  interviewTypes: [],
+                  examStages: [],
+                  writtenExamDetails: "",
+                  technicalQuestions: "",
+                  behavioralQuestions: "",
+                  generalKnowledgeQuestions: "",
+                  subjectSpecificQuestions: "",
+                  personalityTestDetails: "",
+                  medicalTestDetails: "",
+                  difficultyLevel: "",
+                  preparation: "",
+                  surprisingAspects: "",
+                  studyMaterials: "",
+                  coachingInstitute: "",
+                  rounds: [],
+                  overallRating: 0,
+                  wouldRecommend: false,
+                  additionalNotes: "",
+                  outcome: "",
+                  feedbackReceived: "",
+                  resultDeclared: "",
+                  cutoffMarks: "",
+                  rankAchieved: "",
+                  email: "",
+                  name: "",
+                  anonymous: true,
+                  status: "Pending",
+              };
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    // const updateFormData = useCallback(
-    //     (field: keyof FormData, value: FormData[typeof field]) => {
-    //         setFormData((prev) => ({ ...prev, [field]: value }));
-    //         // Clear error when field is updated
-    //         if (errors[field]) {
-    //             setErrors((prev) => ({ ...prev, [field]: "" }));
-    //         }
-    //     },
-    //     [errors]
-    // );
-
     const updateFormData = useCallback(
         <K extends keyof FormData>(field: K, value: FormData[K]) => {
             setFormData((prev) => ({ ...prev, [field]: value }));
+
+            // Clear error for the field being updated
             if (errors[field]) {
                 setErrors((prev) => ({ ...prev, [field]: "" }));
             }
@@ -137,7 +181,7 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
                 break;
             case 2:
                 if (!formData.interviewFormat) newErrors.interviewFormat = "Interview format is required";
-                if (formData.interviewRounds < 1) newErrors.interviewRounds = "At least 1 round is required";
+                if (formData.interviewRounds < 1 || formData.interviewRounds > 7) newErrors.interviewRounds = "Rounds must be between 1 and 7";
                 if (formData?.interviewTypes?.length == 0) newErrors.interviewTypes = "Interview types are required";
                 if (newErrors && Object.keys(newErrors).length !== 0) {
                     setErrorMessage(newErrors);
@@ -163,6 +207,8 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
                         }
                         if (round?.outcome == "") newErrors[`round${index + 1}Outcome`] = `Round ${index + 1} Select an outcome`;
                     });
+
+                    console.log(newErrors);
                 }
 
                 if (newErrors && Object.keys(newErrors).length !== 0) {
@@ -192,12 +238,22 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
         }
 
         setErrors(newErrors);
+
         return Object.keys(newErrors).length === 0;
     };
 
     const nextStep = () => {
+        if (!validateStep(currentStep)) {
+            scrollToError();
+            return;
+        }
+
         if (validateStep(currentStep) && currentStep < steps.length) {
             setCurrentStep((prev) => prev + 1);
+            // Scroll the content container to top
+            if (stepContentRef.current) {
+                stepContentRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+            }
         }
     };
 
@@ -205,83 +261,156 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
         if (currentStep > 1) {
             setCurrentStep((prev) => prev - 1);
         }
+        // Scroll the content container to top
+        if (stepContentRef.current) {
+            stepContentRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+        }
     };
 
     const handleSubmit = async () => {
         if (!validateStep(4)) return;
-
         setIsSubmitting(true);
 
-        // Simulate API call
+        if (isEdit && initialExperience) {
+            try {
+                const response = await fetch(`/api/share-experience/${expId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                });
 
-        try {
-            const response = await fetch("/api/share-experience", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
+                const result = await response.json();
 
-            const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result?.message || "Something went wrong");
+                }
 
-            if (!response.ok) {
-                throw new Error(result?.message || "Something went wrong");
+                setFormData({
+                    interviewCategory: "",
+                    examType: "",
+                    industryType: "",
+                    company: "",
+                    position: "",
+                    location: "",
+                    interviewDate: "",
+                    applicationSource: "",
+                    salaryRange: "",
+                    examName: "",
+                    postAppliedFor: "",
+                    qualificationRequired: "",
+                    interviewFormat: "",
+                    interviewRounds: 1,
+                    totalDuration: "",
+                    interviewers: "",
+                    interviewTypes: [],
+                    examStages: [],
+                    rounds: [],
+                    writtenExamDetails: "",
+                    technicalQuestions: "",
+                    behavioralQuestions: "",
+                    generalKnowledgeQuestions: "",
+                    subjectSpecificQuestions: "",
+                    personalityTestDetails: "",
+                    medicalTestDetails: "",
+                    difficultyLevel: "",
+                    preparation: "",
+                    surprisingAspects: "",
+                    studyMaterials: "",
+                    coachingInstitute: "",
+                    overallRating: 0,
+                    wouldRecommend: false,
+                    additionalNotes: "",
+                    outcome: "",
+                    feedbackReceived: "",
+                    resultDeclared: "",
+                    cutoffMarks: "",
+                    rankAchieved: "",
+                    email: "",
+                    anonymous: true,
+                    name: "",
+                    status: "Pending",
+                });
+
+                router.push("/dashboard");
+
+                toast.success("Experience edited successfully!");
+            } catch {
+                toast.error("Failed to edit experience");
+            } finally {
+                setIsSubmitting(false);
             }
+        } else {
+            try {
+                const response = await fetch("/api/share-experience", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-            toast.success("Experience submitted successfully!");
-        } catch {
-            toast.error("Failed to submit experience");
-        } finally {
-            setIsSubmitting(false);
-            setShowPrefModal(true);
-            setCurrentStep(1);
-            setFormData({
-                interviewCategory: "",
-                examType: "",
-                industryType: "",
-                company: "",
-                position: "",
-                location: "",
-                interviewDate: "",
-                applicationSource: "",
-                salaryRange: "",
-                examName: "",
-                postAppliedFor: "",
-                qualificationRequired: "",
-                interviewFormat: "",
-                interviewRounds: 1,
-                totalDuration: "",
-                interviewers: "",
-                interviewTypes: [],
-                examStages: [],
-                rounds: [],
-                writtenExamDetails: "",
-                technicalQuestions: "",
-                behavioralQuestions: "",
-                generalKnowledgeQuestions: "",
-                subjectSpecificQuestions: "",
-                personalityTestDetails: "",
-                medicalTestDetails: "",
-                difficultyLevel: "",
-                preparation: "",
-                surprisingAspects: "",
-                studyMaterials: "",
-                coachingInstitute: "",
-                overallRating: 0,
-                wouldRecommend: false,
-                additionalNotes: "",
-                outcome: "",
-                feedbackReceived: "",
-                resultDeclared: "",
-                cutoffMarks: "",
-                rankAchieved: "",
-                email: "",
-                anonymous: true,
-                name: "",
-                status: "Pending",
-            });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result?.message || "Something went wrong");
+                }
+
+                setFormData({
+                    interviewCategory: "",
+                    examType: "",
+                    industryType: "",
+                    company: "",
+                    position: "",
+                    location: "",
+                    interviewDate: "",
+                    applicationSource: "",
+                    salaryRange: "",
+                    examName: "",
+                    postAppliedFor: "",
+                    qualificationRequired: "",
+                    interviewFormat: "",
+                    interviewRounds: 1,
+                    totalDuration: "",
+                    interviewers: "",
+                    interviewTypes: [],
+                    examStages: [],
+                    rounds: [],
+                    writtenExamDetails: "",
+                    technicalQuestions: "",
+                    behavioralQuestions: "",
+                    generalKnowledgeQuestions: "",
+                    subjectSpecificQuestions: "",
+                    personalityTestDetails: "",
+                    medicalTestDetails: "",
+                    difficultyLevel: "",
+                    preparation: "",
+                    surprisingAspects: "",
+                    studyMaterials: "",
+                    coachingInstitute: "",
+                    overallRating: 0,
+                    wouldRecommend: false,
+                    additionalNotes: "",
+                    outcome: "",
+                    feedbackReceived: "",
+                    resultDeclared: "",
+                    cutoffMarks: "",
+                    rankAchieved: "",
+                    email: "",
+                    anonymous: true,
+                    name: "",
+                    status: "Pending",
+                });
+
+                router.push("/dashboard");
+
+                toast.success("Experience submitted successfully!");
+            } catch {
+                toast.error("Failed to submit experience");
+            } finally {
+                setIsSubmitting(false);
+            }
         }
+
         // Reset form
     };
 
@@ -295,8 +424,8 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
             updateFormData("name", session?.user?.name || "");
             updateFormData("email", session?.user?.email || "");
         } else {
-            updateFormData("name", "");
-            updateFormData("email", "");
+            updateFormData("name", "Anonymous");
+            updateFormData("email", "anonymous@xyz.com");
         }
         setShowPrefModal(false);
     };
@@ -305,13 +434,29 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
         // setShowPrefModal(false);
     };
 
+    //function scroll to error
+    function scrollToError() {
+        const elemennt = document.querySelectorAll(".error");
+
+        if (elemennt.length) {
+            console.log(elemennt[elemennt.length - 1]);
+            elemennt[elemennt.length - 1].scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+
     //using dummy data for now
     useEffect(() => {
+        // if (isEdit && initialExperience) {
+        //     setFormData(initialExperience);
+        // } else {
         if (process.env.NODE_ENV === "development") {
             setFormData(dummyFormData);
             console.log("%c🚀 Development Mode Active!", "color: white; background: #4CAF50; font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 4px;");
         }
+        // }
     }, []);
+
+    const stepContentRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className="max-w-4xl mx-auto min-h-0">
@@ -327,13 +472,13 @@ export function InterviewStepper({ session }: InterviewStepperProps) {
                 </div>
 
                 {/* Step Content */}
-                <div className="px-3 sm:px-6 py-4 sm:py-8 flex-1 overflow-y-auto">
+                <div className="px-3 sm:px-6 py-4 sm:py-8 flex-1 overflow-y-auto" ref={stepContentRef}>
                     <StepContent step={currentStep} formData={formData} updateFormData={updateFormData} errors={errors} isSubmitting={isSubmitting} />
                 </div>
 
                 {/* Navigation */}
                 <div className="px-3 sm:px-6 py-4 sm:py-6 bg-gray-750 border-t border-gray-700 flex-shrink-0">
-                    <NavigationButtons currentStep={currentStep} totalSteps={steps.length} onNext={nextStep} onPrev={prevStep} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+                    <NavigationButtons currentStep={currentStep} totalSteps={steps.length} onNext={nextStep} onPrev={prevStep} onSubmit={handleSubmit} isSubmitting={isSubmitting} isEdit={isEdit} />
                 </div>
             </div>
         </div>
