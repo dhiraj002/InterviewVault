@@ -32,16 +32,19 @@ declare module "next-auth" {
             name?: string | null;
             email?: string | null;
             image?: string | null;
+            isAdmin?: boolean; // Optional property to indicate if the user is an admin
         };
     }
 
     interface User extends DefaultUser {
         id: string;
+        isAdmin?: boolean;
     }
 }
 
 declare module "next-auth/jwt" {
     interface JWT {
         id: string;
+        isAdmin?: boolean;
     }
 }

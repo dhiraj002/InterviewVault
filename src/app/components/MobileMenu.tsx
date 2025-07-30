@@ -5,9 +5,9 @@ import { FiMenu, FiX } from "react-icons/fi";
 import Link from "next/link";
 import LogoutButton from "./LogOutBTn";
 
-type Props = { isLoggedIn: boolean };
+type Props = { isLoggedIn: boolean; isAdmin: boolean };
 
-export default function MobileMenu({ isLoggedIn }: Props) {
+export default function MobileMenu({ isLoggedIn, isAdmin }: Props) {
     const [open, setOpen] = useState(false);
     const toggle = () => setOpen(!open);
 
@@ -39,6 +39,11 @@ export default function MobileMenu({ isLoggedIn }: Props) {
                                 <div className="px-4 py-3 text-sm text-white" onClick={() => setOpen(false)}>
                                     <LogoutButton />
                                 </div>
+                                {isAdmin && (
+                                    <Link href="/admin" className="px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setOpen(false)}>
+                                        Admin
+                                    </Link>
+                                )}
                             </>
                         ) : (
                             <>

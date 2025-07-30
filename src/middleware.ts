@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get("next-auth.session-token")?.value ?? request.cookies.get("__Secure-next-auth.session-token")?.value;
 
     // Define protected routes
-    const protectedRoutes = ["/share-experience", "/dashboard"];
+    const protectedRoutes = ["/share-experience", "/dashboard", "/admin"];
 
     // Check if current route is protected
     const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
@@ -25,5 +25,5 @@ export function middleware(request: NextRequest) {
 
 // Middleware applies only to selected routes (can be expanded later)
 export const config = {
-    matcher: ["/share-experience/:path*", "/dashboard/:path*"], // include dashboard as well
+    matcher: ["/share-experience/:path*", "/dashboard/:path*", "/admin/:path*"], // include dashboard as well
 };

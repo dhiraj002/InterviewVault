@@ -7,6 +7,9 @@ import Link from "next/link";
 export default async function NavBar() {
     const session = await getServerSession(authOptions);
     const isLoggedIn = !!session?.user;
+    // console.log("User is admin:", session?.user);
+    const isAdmin = session?.user?.isAdmin || false;
+    console.log("User is admin:", session?.user);
 
     return (
         <nav className="bg-[#0d1117] border-b border-gray-800 px-4 py-4">
@@ -15,9 +18,9 @@ export default async function NavBar() {
                     InterviewVault
                 </Link>
                 <div className="hidden md:flex space-x-6">
-                    <NavLinks isLoggedIn={isLoggedIn} />
+                    <NavLinks isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
                 </div>
-                <MobileMenu isLoggedIn={isLoggedIn} />
+                <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
             </div>
         </nav>
     );

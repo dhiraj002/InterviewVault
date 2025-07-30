@@ -28,6 +28,15 @@ export const authOptions: AuthOptions = {
             if (user?.email) {
                 const fetchedUser = await UserModel.findOne({ email: user.email });
 
+                if (process.env.ADMIN_EMAIL && user.email == process.env.ADMIN_EMAIL) {
+                    console.log(process.env.ADMIN_EMAIL, "is admin", user.email);
+
+                    token.isAdmin = true; // Add isAdmin property if user is admin
+                } else {
+                    token.isAdmin = false;
+                    console.log(process.env.ADMIN_EMAIL, "is not admin");
+                }
+
                 if (fetchedUser) {
                     token.id = fetchedUser._id.toString(); // ✅ Store MongoDB user ID
                 }
@@ -39,6 +48,7 @@ export const authOptions: AuthOptions = {
         async session({ session, token }) {
             if (session.user && token.id) {
                 session.user.id = token.id as string; // ✅ Attach user ID to session
+                session.user.isAdmin = token.isAdmin || (false as boolean | undefined); // Attach isAdmin to session
             }
             return session;
         },

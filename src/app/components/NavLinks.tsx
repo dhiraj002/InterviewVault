@@ -1,8 +1,8 @@
-type Props = { isLoggedIn: boolean };
+type Props = { isLoggedIn: boolean; isAdmin: boolean };
 import Link from "next/link";
 import LogoutButton from "./LogOutBTn";
 
-export default function NavLinks({ isLoggedIn }: Props) {
+export default function NavLinks({ isLoggedIn, isAdmin }: Props) {
     return (
         <>
             <Link href="/" className="text-gray-300 hover:text-blue-400">
@@ -23,6 +23,12 @@ export default function NavLinks({ isLoggedIn }: Props) {
                     <div className="text-gray-300">
                         <LogoutButton />
                     </div>
+
+                    {isAdmin && (
+                        <Link href="/admin" className="text-gray-300 hover:text-blue-400">
+                            Admin
+                        </Link>
+                    )}
                 </>
             ) : (
                 <>
