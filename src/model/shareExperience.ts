@@ -34,7 +34,6 @@ export interface ExperienceDocument extends Document {
     // Interview Process
     interviewFormat: string;
     totalDuration: string;
-    interviewers: string;
     interviewTypes: string[];
     examStages?: string[];
     writtenExamDetails?: string;
@@ -102,7 +101,6 @@ const experienceSchema = new Schema<ExperienceDocument>(
         interviewFormat: String,
 
         totalDuration: String,
-        interviewers: String,
         interviewTypes: [String],
         examStages: [String],
         writtenExamDetails: String,

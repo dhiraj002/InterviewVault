@@ -245,7 +245,6 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                     interviewFormat: "",
 
                     totalDuration: "",
-                    interviewers: "",
                     interviewTypes: [],
                     examStages: [],
                     rounds: [],
