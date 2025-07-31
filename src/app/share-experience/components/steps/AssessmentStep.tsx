@@ -107,14 +107,27 @@ export function AssessmentStep({ formData, updateFormData, errors }: AssessmentS
                 icon={ThumbsUp}
             />
 
+            <TextAreaField
+                label="Prepration Tips"
+                icon={MessageCircle}
+                value={formData?.preprationTips || ""}
+                onChange={(value) => updateFormData("preprationTips", value)}
+                placeholder={isCompetitiveExam ? "Any preparation tips or strategy that worked well for you?" : "Any insights, mistakes to avoid, or suggestions for future candidates?"}
+                rows={4}
+                error={errors.preprationTips}
+                required
+            />
+
             {/* Additional Notes */}
             <TextAreaField
-                label="Additional Notes and Advice"
+                label=" General Advice or Additional  Notes"
                 icon={MessageCircle}
                 value={formData.additionalNotes}
                 onChange={(value) => updateFormData("additionalNotes", value)}
                 placeholder={isCompetitiveExam ? "Any preparation tips or strategy that worked well for you?" : "Any insights, mistakes to avoid, or suggestions for future candidates?"}
+                required
                 rows={4}
+                error={errors.additionalNotes}
             />
         </div>
     );

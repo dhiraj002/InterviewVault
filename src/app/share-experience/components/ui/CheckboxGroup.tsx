@@ -69,7 +69,7 @@ export function CheckboxGroup({ label, options, value, onChange, error, required
     };
 
     return (
-        <div role="group" aria-labelledby={`${groupId}-label`} aria-invalid={error ? "true" : undefined} aria-describedby={error ? errorId : undefined}>
+        <div role="group" aria-labelledby={`${groupId}-label`} aria-describedby={error ? errorId : undefined}>
             <label id={`${groupId}-label`} className="block text-sm font-medium text-gray-300 mb-3">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}

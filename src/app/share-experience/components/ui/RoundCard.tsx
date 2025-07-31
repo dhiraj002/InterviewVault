@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { ChevronDown, ChevronUp, Trash2, Clock, Monitor, User, Video } from "lucide-react";
 import { InterviewRound } from "../../../../types/interview";
 import { InputField } from "./InputField";
@@ -14,9 +13,10 @@ interface RoundCardProps {
     isExpanded: boolean;
     onToggleExpand: () => void;
     errors: Record<string, string>;
+    interviewCategory: string;
 }
 
-export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, onToggleExpand, errors }: RoundCardProps) {
+export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, onToggleExpand, errors, interviewCategory }: RoundCardProps) {
     const updateField = <K extends keyof InterviewRound>(field: K, value: InterviewRound[K]) => {
         onUpdate({ ...round, [field]: value });
     };
@@ -34,20 +34,31 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
         }
     };
 
-    const roundTypeOptions = [
-        { value: "technical", label: "Technical" },
-        { value: "aptitude", label: "Aptitude" },
-        { value: "behavioral", label: "Behavioral" },
-        { value: "system-design", label: "System Design" },
-        { value: "case-study", label: "Case Study" },
-        { value: "presentation", label: "Presentation" },
-        { value: "hr-screening", label: "HR Screening" },
-        { value: "culture-fit", label: "Culture Fit" },
-        { value: "panel", label: "Panel Interview" },
-        { value: "coding", label: "Coding Challenge" },
-        { value: "whiteboard", label: "Whiteboard" },
-        { value: "take-home", label: "Take Home Assignment" },
-    ];
+    const isCompetitiveExam = interviewCategory === "competitive-exam";
+    const roundTypeOptions = isCompetitiveExam
+        ? [
+              { value: "personality-test", label: "Personality Test" },
+              { value: "written", label: "Written" },
+              { value: "group-discussion", label: "Group Discussion" },
+              { value: "personal-interview", label: "Personal Interview" },
+              { value: "document-verification", label: "Document Verification" },
+              { value: "medical-test", label: "Medical Test" },
+              { value: "physical-test", label: "Physical Fitness Test" },
+              { value: "skill-test", label: "Skill/Trade Test" },
+              { value: "psychological-test", label: "Psychological Assessment" },
+          ]
+        : [
+              { value: "technical", label: "Technical/Coding" },
+              { value: "aptitude", label: "Aptitude Test" },
+              { value: "behavioral", label: "Behavioral" },
+              { value: "system-design", label: "System Design" },
+              { value: "case-study", label: "Case Study" },
+              { value: "presentation", label: "Presentation" },
+              { value: "hr-screening", label: "HR Screening" },
+              { value: "culture-fit", label: "Culture Fit" },
+              { value: "panel", label: "Panel Interview" },
+              { value: "group-discussion", label: "Group Discussion" },
+          ];
 
     const modeOptions = [
         { value: "in-person", label: "In-Person/F2F" },
@@ -148,6 +159,9 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
                             required
                             error={errors[`round${roundNumber}Duration`]}
                         />
+
+                        {/* Outcome */}
+                        <SelectField label="Round Outcome" value={round.outcome} onChange={(value) => updateField("outcome", value)} options={outcomeOptions} placeholder="Select outcome" required error={errors[`round${roundNumber}Outcome`]} />
                     </div>
                     {/* Round Questions */}
                     <TextAreaField
@@ -161,9 +175,6 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
 
                     {/* Round Summary */}
                     <TextAreaField label={`Round ${roundNumber} Summary`} value={round.summary} onChange={(value) => updateField("summary", value)} placeholder="Share round overview, questions asked, your experience..." />
-
-                    {/* Outcome */}
-                    <SelectField label="Round Outcome" value={round.outcome} onChange={(value) => updateField("outcome", value)} options={outcomeOptions} placeholder="Select outcome" required error={errors[`round${roundNumber}Outcome`]} />
                 </div>
             )}
         </div>

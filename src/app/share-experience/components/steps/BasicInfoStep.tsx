@@ -87,6 +87,7 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputFieldFixed label="Your Name" value={formData.name ?? ""} icon={User} required />
                     <InputFieldFixed label="Your Email" value={formData.email ?? ""} icon={Mail} required type="email" />
+                    <InputField label="Linkedin Profile" value={formData.linkedInProfile ?? ""} onChange={(value) => updateFormData("linkedInProfile", value)} placeholder=" https://www.linkedin.com/in/" />
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-6">
@@ -130,28 +131,43 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
                     />
                 )}
 
-                {isCompetitiveExam ? (
+                {/* {isCompetitiveExam ? (
                     <InputField label="Post Applied For" value={formData.postAppliedFor || ""} onChange={(value) => updateFormData("postAppliedFor", value)} placeholder="e.g., IAS, Clerk, Officer" error={errors.postAppliedFor} required />
-                ) : (
-                    <InputField label="Position" value={formData.position} onChange={(value) => updateFormData("position", value)} placeholder="Enter position title" error={errors.position} required />
-                )}
+                ) : ( */}
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
+                <InputField
+                    label={isCompetitiveExam ? "Position Applied For" : "Post Applied For"}
+                    placeholder={isCompetitiveExam ? "e.g. IAS, Clerk, Officer" : "e.g. FrontEnd, Backend, FullStack Developer"}
+                    value={formData.position}
+                    onChange={(value) => updateFormData("position", value)}
+                    error={errors.position}
+                    required
+                />
+                {/* </div> */}
+                {/* )} */}
             </div>
+
+            <InputField label="Current Role" value={formData.currentRole} onChange={(value) => updateFormData("currentRole", value)} placeholder="Your current role" error={errors.currentRole} required />
 
             {/* Qualification */}
             {isCompetitiveExam && (
-                <InputField
-                    label="Qualification Required"
-                    icon={GraduationCap}
-                    value={formData.qualificationRequired || ""}
-                    onChange={(value) => updateFormData("qualificationRequired", value)}
-                    placeholder="e.g., Graduate, Post Graduate, 12th Pass"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <InputField
+                        label="Qualification Required"
+                        icon={GraduationCap}
+                        value={formData.qualificationRequired || ""}
+                        onChange={(value) => updateFormData("qualificationRequired", value)}
+                        placeholder="e.g., Graduate, Post Graduate, 12th Pass"
+                        required
+                        error={errors.qualificationRequired}
+                    />
+
+                    <InputField label="Location" icon={MapPin} value={formData.location} onChange={(value) => updateFormData("location", value)} placeholder={isCompetitiveExam ? "Exam center location" : "City, State or Remote"} />
+                </div>
             )}
 
             {/* Location & Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField label="Location" icon={MapPin} value={formData.location} onChange={(value) => updateFormData("location", value)} placeholder={isCompetitiveExam ? "Exam center location" : "City, State or Remote"} />
-
                 <InputField
                     label={isCompetitiveExam ? "Interview/Exam Date" : "Interview Date"}
                     icon={Calendar}

@@ -6,7 +6,7 @@ import { StepContent } from "./StepContent";
 import { NavigationButtons } from "./NavigationButtons";
 import { ProgressBar } from "./ProgressBar";
 import { FormData, Step } from "../../../types/interview";
-import { dummyFormData } from "@/lib/dummyFormData";
+// import { dummyFormData } from "@/lib/dummyFormData";
 import PostingPreferenceModal from "./PostingPreferenceModal";
 import { useRouter } from "next/navigation";
 
@@ -32,62 +32,6 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
     const router = useRouter();
 
     const [currentStep, setCurrentStep] = useState(1);
-    // const [formData, setFormData] = useState<FormData>({
-    //     // Interview Category
-    //     interviewCategory: "",
-    //     examType: "",
-    //     industryType: "",
-
-    //     // Basic Information
-    //     company: "",
-    //     position: "",
-    //     location: "",
-    //     interviewDate: "",
-    //     applicationSource: "",
-    //     salaryRange: "",
-    //     examName: "",
-    //     postAppliedFor: "",
-    //     qualificationRequired: "",
-
-    //     // Interview Process
-    //     interviewFormat: "",
-    //     interviewRounds: 1,
-    //     totalDuration: "",
-    //     interviewers: "",
-    //     interviewTypes: [],
-    //     examStages: [],
-    //     writtenExamDetails: "",
-
-    //     // Experience Details
-    //     technicalQuestions: "",
-    //     behavioralQuestions: "",
-    //     generalKnowledgeQuestions: "",
-    //     subjectSpecificQuestions: "",
-    //     personalityTestDetails: "",
-    //     medicalTestDetails: "",
-    //     difficultyLevel: "",
-    //     preparation: "",
-    //     surprisingAspects: "",
-    //     studyMaterials: "",
-    //     coachingInstitute: "",
-    //     rounds: [],
-
-    //     // Assessment
-    //     overallRating: 0,
-    //     wouldRecommend: false,
-    //     additionalNotes: "",
-    //     outcome: "",
-    //     feedbackReceived: "",
-    //     resultDeclared: "",
-    //     cutoffMarks: "",
-    //     rankAchieved: "",
-
-    //     // Contact
-    //     email: "",
-    //     name: "",
-    //     anonymous: true,
-    //     status: "Pending",
-    // });
 
     const [formData, setFormData] = useState<FormData>(() => {
         return isEdit && initialExperience
@@ -97,6 +41,7 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                   examType: "",
                   industryType: "",
                   company: "",
+                  currentRole: "",
                   position: "",
                   location: "",
                   interviewDate: "",
@@ -112,14 +57,7 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                   interviewTypes: [],
                   examStages: [],
                   writtenExamDetails: "",
-                  technicalQuestions: "",
-                  behavioralQuestions: "",
-                  generalKnowledgeQuestions: "",
-                  subjectSpecificQuestions: "",
-                  personalityTestDetails: "",
-                  medicalTestDetails: "",
                   difficultyLevel: "",
-                  preparation: "",
                   surprisingAspects: "",
                   studyMaterials: "",
                   coachingInstitute: "",
@@ -132,10 +70,13 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                   resultDeclared: "",
                   cutoffMarks: "",
                   rankAchieved: "",
+                  preprationTips: "",
                   email: "",
                   name: "",
+                  linkedInProfile: "",
                   anonymous: true,
-                  status: "Pending",
+                  status: "pending",
+                  upvotes: 0,
               };
     });
 
@@ -157,15 +98,17 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
     const validateStep = (step: number): boolean => {
         const newErrors: Record<string, string> = {};
         const isCompetitiveExam = formData.interviewCategory === "competitive-exam";
-        const isCorporate = formData.interviewCategory === "corporate";
 
         switch (step) {
             case 1:
                 if (!formData.interviewCategory) newErrors.interviewCategory = "Interview category is required";
+
+                if (!formData.currentRole) newErrors.currentRole = "Current role is required";
                 if (isCompetitiveExam && !formData.examType) newErrors.examType = "Exam type is required";
                 if (isCompetitiveExam) {
                     if (!formData.examName?.trim()) newErrors.examName = "Exam name is required";
-                    if (!formData.postAppliedFor?.trim()) newErrors.postAppliedFor = "Post applied for is required";
+
+                    if (!formData.qualificationRequired?.trim()) newErrors.qualificationRequired = "Qualification required";
                 } else {
                     if (!formData.company.trim()) newErrors.company = "Company/Organization name is required";
                     if (!formData.position.trim()) newErrors.position = "Position is required";
@@ -181,18 +124,15 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                 break;
             case 2:
                 if (!formData.interviewFormat) newErrors.interviewFormat = "Interview format is required";
-                if (formData.interviewRounds < 1 || formData.interviewRounds > 7) newErrors.interviewRounds = "Rounds must be between 1 and 7";
                 if (formData?.interviewTypes?.length == 0) newErrors.interviewTypes = "Interview types are required";
+                if (!formData.difficultyLevel) newErrors.difficultyLevel = "Difficulty level is required";
+
                 if (newErrors && Object.keys(newErrors).length !== 0) {
                     setErrorMessage(newErrors);
                 }
                 break;
             case 3:
-                if (!formData.difficultyLevel) newErrors.difficultyLevel = "Difficulty level is required";
-
-                if (!isCompetitiveExam && !formData.technicalQuestions && formData?.interviewCategory !== "corporate") newErrors.technicalQuestions = "Technical questions are required";
-
-                if (isCorporate && formData?.rounds?.length === 0) {
+                if (formData?.rounds?.length === 0) {
                     newErrors.rounds = "At least 1 round is required";
                 } else {
                     formData?.rounds?.forEach((round, index) => {
@@ -218,6 +158,9 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
             case 4:
                 if (formData.overallRating === 0) newErrors.overallRating = "Overall rating is required";
                 if (!formData.outcome) newErrors.outcome = "Interview outcome is required";
+
+                if (!formData.preprationTips) newErrors.preprationTips = "Prepration tips required";
+                if (!formData.additionalNotes) newErrors.additionalNotes = "General advice required";
 
                 if (newErrors && Object.keys(newErrors).length !== 0) {
                     setErrorMessage(newErrors);
@@ -290,30 +233,26 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                     examType: "",
                     industryType: "",
                     company: "",
+                    currentRole: "",
                     position: "",
+                    linkedInProfile: "",
                     location: "",
                     interviewDate: "",
                     applicationSource: "",
                     salaryRange: "",
                     examName: "",
-                    postAppliedFor: "",
+
                     qualificationRequired: "",
                     interviewFormat: "",
-                    interviewRounds: 1,
+
                     totalDuration: "",
                     interviewers: "",
                     interviewTypes: [],
                     examStages: [],
                     rounds: [],
                     writtenExamDetails: "",
-                    technicalQuestions: "",
-                    behavioralQuestions: "",
-                    generalKnowledgeQuestions: "",
-                    subjectSpecificQuestions: "",
-                    personalityTestDetails: "",
-                    medicalTestDetails: "",
+
                     difficultyLevel: "",
-                    preparation: "",
                     surprisingAspects: "",
                     studyMaterials: "",
                     coachingInstitute: "",
@@ -326,9 +265,11 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                     cutoffMarks: "",
                     rankAchieved: "",
                     email: "",
+                    preprationTips: "",
                     anonymous: true,
                     name: "",
-                    status: "Pending",
+                    status: "pending",
+                    upvotes: 0,
                 });
 
                 router.push("/dashboard");
@@ -362,28 +303,24 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                     company: "",
                     position: "",
                     location: "",
+                    linkedInProfile: "",
+                    currentRole: "",
                     interviewDate: "",
                     applicationSource: "",
                     salaryRange: "",
                     examName: "",
-                    postAppliedFor: "",
+
                     qualificationRequired: "",
                     interviewFormat: "",
-                    interviewRounds: 1,
+
                     totalDuration: "",
                     interviewers: "",
                     interviewTypes: [],
                     examStages: [],
                     rounds: [],
                     writtenExamDetails: "",
-                    technicalQuestions: "",
-                    behavioralQuestions: "",
-                    generalKnowledgeQuestions: "",
-                    subjectSpecificQuestions: "",
-                    personalityTestDetails: "",
-                    medicalTestDetails: "",
+
                     difficultyLevel: "",
-                    preparation: "",
                     surprisingAspects: "",
                     studyMaterials: "",
                     coachingInstitute: "",
@@ -396,9 +333,11 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
                     cutoffMarks: "",
                     rankAchieved: "",
                     email: "",
+                    preprationTips: "",
                     anonymous: true,
                     name: "",
-                    status: "Pending",
+                    status: "pending",
+                    upvotes: 0,
                 });
 
                 router.push("/dashboard");
@@ -449,10 +388,10 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
         // if (isEdit && initialExperience) {
         //     setFormData(initialExperience);
         // } else {
-        if (process.env.NODE_ENV === "development") {
-            setFormData(dummyFormData);
-            console.log("%c🚀 Development Mode Active!", "color: white; background: #4CAF50; font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 4px;");
-        }
+        // if (process.env.NODE_ENV === "development") {
+        //     // setFormData(dummyFormData);
+        //     console.log("%c🚀 Development Mode Active!", "color: white; background: #4CAF50; font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 4px;");
+        // }
         // }
     }, []);
 

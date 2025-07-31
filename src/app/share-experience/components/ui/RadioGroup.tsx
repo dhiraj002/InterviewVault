@@ -90,7 +90,6 @@ export function RadioGroup({ label, options, value, onChange, error, required }:
                                 onChange={(e) => onChange(e.target.value)}
                                 className="sr-only" // visually hidden but accessible
                                 aria-checked={isSelected}
-                                aria-required={required || undefined}
                             />
                             <label
                                 htmlFor={inputId}

@@ -1,11 +1,12 @@
 "use client";
 
-import { User, Video, Phone, UserCheck, Clock, Users, FileText } from "lucide-react";
+import { User, Video, Phone, UserCheck, Clock, FileText } from "lucide-react";
 import { FormData } from "../../../../types/interview";
 import { InputField } from "../ui/InputField";
 import { RadioGroup } from "../ui/RadioGroup";
 import { CheckboxGroup } from "../ui/CheckboxGroup";
 import { TextAreaField } from "../ui/TextAreaField";
+import { SelectField } from "../ui/SelectField";
 
 interface InterviewProcessStepProps {
     formData: FormData;
@@ -27,6 +28,7 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
         isCompetitiveExam
             ? [
                   { value: "personality-test", label: "Personality Test" },
+                  { value: "written", label: "Written" },
                   { value: "group-discussion", label: "Group Discussion" },
                   { value: "personal-interview", label: "Personal Interview" },
                   { value: "document-verification", label: "Document Verification" },
@@ -80,21 +82,20 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
 
             <RadioGroup label={isCompetitiveExam ? "Test Format" : "Interview Format"} options={formatOptions} value={formData.interviewFormat} onChange={(value) => updateFormData("interviewFormat", value)} error={errors.interviewFormat} required />
 
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField label="Number of Rounds" type="number" value={formData.interviewRounds.toString()} onChange={(value) => updateFormData("interviewRounds", parseInt(value) || 1)} min={1} max={7} error={errors.interviewRounds} required /> */}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField
-                    label="Number of Rounds"
-                    type="number"
-                    value={formData.interviewRounds.toString()}
-                    onChange={(value) => {
-                        const parsed = parseInt(value);
-                        updateFormData("interviewRounds", isNaN(parsed) ? 1 : parsed);
-                    }}
-                    min={1}
-                    max={7}
-                    error={errors.interviewRounds}
+                <SelectField
+                    label="Overall Difficulty Level"
+                    value={formData.difficultyLevel}
+                    onChange={(val) => updateFormData("difficultyLevel", val)}
+                    options={[
+                        { value: "very-easy", label: "Very Easy" },
+                        { value: "easy", label: "Easy" },
+                        { value: "medium", label: "Medium" },
+                        { value: "hard", label: "Hard" },
+                        { value: "very-hard", label: "Very Hard" },
+                    ]}
+                    placeholder="Select difficulty"
+                    error={errors.difficultyLevel}
                     required
                 />
 
@@ -106,14 +107,6 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
                     placeholder={isCompetitiveExam ? "e.g., 3 hours exam + 30 min interview" : "e.g., 2 hours, 45 minutes"}
                 />
             </div>
-
-            <InputField
-                label={isCompetitiveExam ? "Examiners" : "Interviewers"}
-                icon={Users}
-                value={formData.interviewers}
-                onChange={(value) => updateFormData("interviewers", value)}
-                placeholder={isCompetitiveExam ? "e.g., Chairman, Subject Expert, Psychologist" : "e.g., Engineering Manager, Senior Developer"}
-            />
 
             <CheckboxGroup
                 label={isCompetitiveExam ? "Types of Tests/Assessments" : "Types of Interviews"}

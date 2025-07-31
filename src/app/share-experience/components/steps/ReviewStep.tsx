@@ -103,7 +103,7 @@ export function ReviewStep({ formData, isSubmitting }: ReviewStepProps) {
                             <div className="p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">{isCompetitiveExam ? <BookOpen className="w-6 h-6 text-blue-400" /> : <Building2 className="w-6 h-6 text-blue-400" />}</div>
                             <div className="space-y-1">
                                 <h3 className="text-xl font-bold text-white">{isCompetitiveExam ? formData.examName : formData.company}</h3>
-                                <p className="text-gray-300 font-medium">{isCompetitiveExam ? formData.postAppliedFor : formData.position}</p>
+                                <p className="text-gray-300 font-medium">{formData.position}</p>
                                 {formData.location && (
                                     <div className="flex items-center gap-2 text-gray-400 text-sm">
                                         <MapPin className="w-4 h-4" />
@@ -140,7 +140,7 @@ export function ReviewStep({ formData, isSubmitting }: ReviewStepProps) {
                                 <Users className="w-5 h-5 text-purple-400" />
                                 <div>
                                     <p className="text-xs text-gray-400 uppercase tracking-wide">Rounds</p>
-                                    <p className="text-white font-semibold">{formData.interviewRounds}</p>
+                                    <p className="text-white font-semibold">{formData.rounds?.length}</p>
                                 </div>
                             </div>
                         </div>
@@ -327,11 +327,24 @@ export function ReviewStep({ formData, isSubmitting }: ReviewStepProps) {
                     </div>
 
                     {/* Additional Notes */}
+                    {formData.preprationTips && (
+                        <div className="space-y-3">
+                            <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <Lightbulb className="w-5 h-5 text-yellow-400" />
+                                Prepration Tips
+                            </h4>
+                            <div className="bg-gray-800/30 rounded-lg p-4">
+                                <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{formData.preprationTips}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Additional Notes */}
                     {formData.additionalNotes && (
                         <div className="space-y-3">
                             <h4 className="text-lg font-semibold text-white flex items-center gap-2">
                                 <MessageSquare className="w-5 h-5 text-green-400" />
-                                Additional Notes
+                                General Advice
                             </h4>
                             <div className="bg-gray-800/30 rounded-lg p-4">
                                 <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{formData.additionalNotes}</p>
