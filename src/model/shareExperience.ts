@@ -18,7 +18,9 @@ export interface ExperienceDocument extends Document {
     interviewCategory: string;
     examType?: string;
     industryType?: string;
+    currentRole: string;
 
+    // Basic Information
     company: string;
     position: string;
     location: string;
@@ -26,30 +28,25 @@ export interface ExperienceDocument extends Document {
     applicationSource: string;
     salaryRange: string;
     examName?: string;
-    postAppliedFor?: string;
     qualificationRequired?: string;
+    linkedInProfile?: string;
 
+    // Interview Process
     interviewFormat: string;
-    interviewRounds: number;
     totalDuration: string;
     interviewers: string;
     interviewTypes: string[];
     examStages?: string[];
     writtenExamDetails?: string;
-    rounds?: InterviewRoundDocument[];
 
-    technicalQuestions: string;
-    behavioralQuestions: string;
-    generalKnowledgeQuestions?: string;
-    subjectSpecificQuestions?: string;
-    personalityTestDetails?: string;
-    medicalTestDetails?: string;
+    // Experience Details
     difficultyLevel: string;
-    preparation: string;
     surprisingAspects: string;
     studyMaterials?: string;
     coachingInstitute?: string;
+    rounds?: InterviewRoundDocument[];
 
+    // Assessment
     overallRating: number;
     wouldRecommend: boolean;
     additionalNotes: string;
@@ -58,11 +55,14 @@ export interface ExperienceDocument extends Document {
     resultDeclared?: string;
     cutoffMarks?: string;
     rankAchieved?: string;
+    preprationTips?: string;
 
+    // Contact
     email?: string;
     name?: string;
     anonymous: boolean;
-    status: "Pending" | "Published" | "Review";
+    status: "pending" | "published" | "review";
+    upvotes?: number;
 }
 
 const interviewRoundSchema = new Schema<InterviewRoundDocument>({
@@ -86,6 +86,7 @@ const experienceSchema = new Schema<ExperienceDocument>(
         interviewCategory: { type: String, required: true },
         examType: String,
         industryType: String,
+        currentRole: String,
 
         // Basic Info
         company: String,
@@ -95,12 +96,11 @@ const experienceSchema = new Schema<ExperienceDocument>(
         applicationSource: String,
         salaryRange: String,
         examName: String,
-        postAppliedFor: String,
         qualificationRequired: String,
 
         // Interview Process
         interviewFormat: String,
-        interviewRounds: Number,
+
         totalDuration: String,
         interviewers: String,
         interviewTypes: [String],
@@ -109,14 +109,7 @@ const experienceSchema = new Schema<ExperienceDocument>(
         rounds: [interviewRoundSchema],
 
         // Experience Details
-        technicalQuestions: String,
-        behavioralQuestions: String,
-        generalKnowledgeQuestions: String,
-        subjectSpecificQuestions: String,
-        personalityTestDetails: String,
-        medicalTestDetails: String,
         difficultyLevel: String,
-        preparation: String,
         surprisingAspects: String,
         studyMaterials: String,
         coachingInstitute: String,
@@ -130,18 +123,21 @@ const experienceSchema = new Schema<ExperienceDocument>(
         resultDeclared: String,
         cutoffMarks: String,
         rankAchieved: String,
+        preprationTips: String,
 
         // Contact
         email: String,
         name: String,
+        linkedInProfile: String,
         anonymous: { type: Boolean, required: true },
 
         // Status
         status: {
             type: String,
-            enum: ["Pending", "Published", "Review"],
-            default: "Pending",
+            enum: ["pending", "published", "review"],
+            default: "pending",
         },
+        upvotes: Number,
     },
     { timestamps: true }
 );
