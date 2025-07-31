@@ -5,6 +5,7 @@ export const dummyFormData: FormData = {
     interviewCategory: "corporate",
     examType: "Online Assessment",
     industryType: "technology",
+    currentRole: "student",
 
     // Basic Information
     company: "TechNova Solutions",
@@ -14,14 +15,13 @@ export const dummyFormData: FormData = {
     applicationSource: "on-campus",
     salaryRange: "6-8 LPA",
     examName: "TechNova Aptitude & Coding Test",
-    postAppliedFor: "Software Engineer - Frontend",
+
     qualificationRequired: "B.Tech in Computer Science",
 
     // Interview Process
     interviewFormat: "virtual",
-    interviewRounds: 3,
+
     totalDuration: "2 hours",
-    interviewers: "Tech Lead, HR Manager, Product Manager",
     interviewTypes: ["technical", "aptitude", "behavioral"],
     examStages: ["MCQ Aptitude", "Coding Round", "System Design"],
     writtenExamDetails: "MCQ on aptitude, logic, data structures, and algorithms.",
@@ -65,21 +65,8 @@ export const dummyFormData: FormData = {
     ],
 
     // Experience Details
-    technicalQuestions: `
-    - Explain event delegation in JavaScript.
-    - Differences between useEffect and useLayoutEffect in React?
-    - How to reduce bundle size in a React app?
-  `,
-    behavioralQuestions: `
-    - How do you handle feedback?
-    - Talk about a time you led a team effort.
-  `,
-    generalKnowledgeQuestions: "None asked.",
-    subjectSpecificQuestions: "JavaScript, React, Web Performance Optimization.",
-    personalityTestDetails: "Self-assessment on adaptability and learning curve.",
-    medicalTestDetails: "No medical test conducted.",
+
     difficultyLevel: "Medium to Hard",
-    preparation: "Practiced LeetCode, revised system design and React patterns.",
     surprisingAspects: "They asked about Vite vs CRA and had deep React focus.",
     studyMaterials: "LeetCode, FrontendMasters, InterviewBit",
     coachingInstitute: "None",
@@ -98,5 +85,7 @@ export const dummyFormData: FormData = {
     email: "johndoe@example.com",
     name: "John Doe",
     anonymous: false,
-    status: "Pending",
+    status: "pending",
+    //for voting
+    upvotes: 0,
 };
