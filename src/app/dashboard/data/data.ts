@@ -18,8 +18,8 @@ export async function getUserInterviews(userId: string): Promise<Interview[]> {
 
         const formatted: Interview[] = experiences.map((exp) => ({
             id: exp._id.toString(),
-            title: `${exp.position || "Untitled"} - ${exp.company || "Unknown"}`,
-            company: exp.company || "Unknown",
+            title: `${exp.position || "Untitled"} - ${exp.company || exp.examName || "Unknown"}`,
+            company: exp.company || exp.examName || "Unknown",
             status: exp?.status?.toLowerCase() || "draft",
             type: exp.interviewCategory || "corporate",
             date: exp.createdAt.toISOString().split("T")[0],
