@@ -375,7 +375,6 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
         const elemennt = document.querySelectorAll(".error");
 
         if (elemennt.length) {
-            console.log(elemennt[elemennt.length - 1]);
             elemennt[elemennt.length - 1].scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }

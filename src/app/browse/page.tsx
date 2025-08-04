@@ -37,7 +37,6 @@ async function fetchExperiences(searchParams: Record<string, string | string[] |
 
 export default async function Browse({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const allParams = await searchParams;
-    console.log(allParams);
 
     const { experiences, pagination } = await fetchExperiences(allParams);
 

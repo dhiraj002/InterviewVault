@@ -23,7 +23,6 @@ function capitalizeFirst(str: string) {
 
 export default function ExperienceCard({ title, tags, summary, upvote, name, currRole, difficultyLevel, outcome }: ExperienceCardProps) {
     function getOutcomeColor(outcome: string) {
-        console.log(outcome);
         const value = outcome.toLowerCase();
         if (value === "selected" || value === "offer received") return "bg-green-500";
         if (value === "rejected" || value === "not-selected") return "bg-red-500";
