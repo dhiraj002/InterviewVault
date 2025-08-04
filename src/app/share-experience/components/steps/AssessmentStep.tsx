@@ -14,18 +14,20 @@ interface AssessmentStepProps {
     errors: Record<string, string>;
 }
 
-const competitiveOutcomeOptions = [
-    { value: "selected", label: "Selected/Qualified" },
-    { value: "not-selected", label: "Not Selected" },
-    { value: "waiting-list", label: "Waiting List" },
-    { value: "result-pending", label: "Result Pending" },
-    { value: "withdrew", label: "Withdrew Application" },
-];
+// const competitiveOutcomeOptions = [
+//     { value: "selected", label: "Selected/Qualified" },
+//     { value: "not-selected", label: "Not Selected" },
+//     { value: "waiting-list", label: "Waiting List" },
+//     { value: "result-pending", label: "Result Pending" },
+//     { value: "withdrew", label: "Withdrew Application" },
+// ];
 
-const companyOutcomeOptions = [
-    { value: "offer", label: "Received Offer" },
+const OutcomeOptions = [
+    { value: "selected", label: "Selected" },
+    { value: "offer-received", label: "Received Offer" },
     { value: "rejected", label: "Rejected" },
     { value: "pending", label: "Still Pending" },
+    { value: "ghosted", label: "Ghosted" },
     { value: "withdrew", label: "Withdrew Application" },
 ];
 
@@ -70,7 +72,7 @@ export function AssessmentStep({ formData, updateFormData, errors }: AssessmentS
                     icon={Award}
                     value={formData.outcome}
                     onChange={(value) => updateFormData("outcome", value)}
-                    options={isCompetitiveExam ? competitiveOutcomeOptions : companyOutcomeOptions}
+                    options={OutcomeOptions}
                     placeholder="Select outcome"
                     error={errors.outcome}
                     required

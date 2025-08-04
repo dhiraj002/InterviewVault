@@ -88,11 +88,9 @@ export function InterviewProcessStep({ formData, updateFormData, errors }: Inter
                     value={formData.difficultyLevel}
                     onChange={(val) => updateFormData("difficultyLevel", val)}
                     options={[
-                        { value: "very-easy", label: "Very Easy" },
                         { value: "easy", label: "Easy" },
                         { value: "medium", label: "Medium" },
                         { value: "hard", label: "Hard" },
-                        { value: "very-hard", label: "Very Hard" },
                     ]}
                     placeholder="Select difficulty"
                     error={errors.difficultyLevel}

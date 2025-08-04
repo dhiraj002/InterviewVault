@@ -42,6 +42,7 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
     const industryTypes = [
         { value: "technology", label: "Technology/IT" },
         { value: "finance", label: "Finance/Banking" },
+        { value: "support", label: "Support" },
         { value: "healthcare", label: "Healthcare/Medical" },
         { value: "hospitality", label: "Hospitality/Hotel Industry" },
         { value: "manufacturing", label: "Manufacturing" },

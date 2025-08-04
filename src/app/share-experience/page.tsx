@@ -3,7 +3,7 @@ import Head from "next/head";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/authOptions";
 
-export default async function Home() {
+export default async function ShareExperience() {
     const session = await getServerSession(authOptions);
 
     if (!session) {
