@@ -110,16 +110,16 @@ export default function Footer() {
                     <p className="text-gray-400 text-sm">
                         Have questions or feedback?
                         <br />
-                        Email us at{" "}
-                        <Link href="mailto:support@interviewvault.com" className="text-blue-400 hover:underline">
-                            support@interviewvault.com
+                        Email us at:{" "}
+                        <Link href="mailto:dhirajdhiman15@gmail.com" className="text-blue-400 hover:underline">
+                            dhirajdhiman15@gmail.com
                         </Link>
                     </p>
                     <div className="flex space-x-4 mt-4">
-                        <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <Link href="https://linkedin.com/in/dhiraj-dhiman02" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
                             <FaLinkedin className="w-5 h-5" />
                         </Link>
-                        <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <Link href="https://github.com/dhiraj002" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
                             <FaGithub className="w-5 h-5" />
                         </Link>
                     </div>

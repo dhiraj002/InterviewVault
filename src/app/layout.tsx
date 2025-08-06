@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: "InterviewVault - Share Your Competitive Exam Interview Experiences",
     description: "Connect with aspirants by sharing your UPSC, SSB, and other competitive exam interview experiences. Learn from real stories and prepare better.",
+    icons: {
+        icon: "/InterviewVault_logo.png",
+    },
 };
 
 export default function RootLayout({
