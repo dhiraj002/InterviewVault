@@ -37,8 +37,11 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
     const isCompetitiveExam = interviewCategory === "competitive-exam";
     const roundTypeOptions = isCompetitiveExam
         ? [
+              { value: "preliminary-exam", label: "Preliminary Exam" },
+              { value: "main-exam", label: "Main Exam" },
               { value: "personality-test", label: "Personality Test" },
-              { value: "written", label: "Written" },
+              { value: "written", label: "Written Test" },
+              { value: "descriptive", label: "Descriptive Test" },
               { value: "group-discussion", label: "Group Discussion" },
               { value: "personal-interview", label: "Personal Interview" },
               { value: "document-verification", label: "Document Verification" },
@@ -46,18 +49,28 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
               { value: "physical-test", label: "Physical Fitness Test" },
               { value: "skill-test", label: "Skill/Trade Test" },
               { value: "psychological-test", label: "Psychological Assessment" },
+              { value: "language-test", label: "Language Proficiency Test" },
+              { value: "typing-test", label: "Typing/Stenography Test" },
+              { value: "computer-test", label: "Computer Based Test" },
           ]
         : [
-              { value: "technical", label: "Technical/Coding" },
+              { value: "technical", label: "Technical/Coding Round" },
               { value: "aptitude", label: "Aptitude Test" },
-              { value: "behavioral", label: "Behavioral" },
+              { value: "behavioral", label: "Behavioral Interview" },
               { value: "system-design", label: "System Design" },
-              { value: "case-study", label: "Case Study" },
-              { value: "presentation", label: "Presentation" },
+              { value: "case-study", label: "Case Study Round" },
+              { value: "presentation", label: "Presentation Round" },
               { value: "hr-screening", label: "HR Screening" },
               { value: "culture-fit", label: "Culture Fit" },
               { value: "panel", label: "Panel Interview" },
               { value: "group-discussion", label: "Group Discussion" },
+              { value: "managerial", label: "Managerial Round" },
+              { value: "product-round", label: "Product Interview" },
+              { value: "bar-raiser", label: "Bar Raiser Round" },
+              { value: "assignment", label: "Take-home Assignment" },
+              { value: "live-coding", label: "Live Coding Session" },
+              { value: "whiteboard", label: "Whiteboard Interview" },
+              { value: "portfolio-review", label: "Portfolio/Project Review" },
           ];
 
     const modeOptions = [
@@ -68,11 +81,9 @@ export function RoundCard({ round, roundNumber, onUpdate, onDelete, isExpanded, 
     ];
 
     const difficultyOptions = [
-        { value: "very-easy", label: "Very Easy" },
         { value: "easy", label: "Easy" },
         { value: "medium", label: "Medium" },
         { value: "hard", label: "Hard" },
-        { value: "very-hard", label: "Very Hard" },
     ];
 
     const outcomeOptions = [
