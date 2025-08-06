@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ExperienceCardProps {
     id?: string;
@@ -21,7 +22,8 @@ function capitalizeFirst(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export default function ExperienceCard({ title, tags, summary, upvote, name, currRole, difficultyLevel, outcome }: ExperienceCardProps) {
+export default function ExperienceCard({ id, title, tags, summary, upvote, name, currRole, difficultyLevel, outcome }: ExperienceCardProps) {
+    const router = useRouter();
     function getOutcomeColor(outcome: string) {
         const value = outcome.toLowerCase();
         if (value === "selected" || value === "offer received") return "bg-green-500";
@@ -58,7 +60,14 @@ export default function ExperienceCard({ title, tags, summary, upvote, name, cur
             {/* Footer */}
             <div className="flex justify-between  items-center text-xs text-gray-400">
                 <span className="bold">👍 {upvote}</span>
-                <Link href="#" className="text-blue-400 hover:underline">
+                <Link
+                    href="#"
+                    className="text-blue-400 hover:underline"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        router.push(`/experience/${id}`);
+                    }}
+                >
                     Read More →
                 </Link>
             </div>
