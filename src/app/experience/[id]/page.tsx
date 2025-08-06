@@ -35,7 +35,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ id:
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
                 <h2 className="text-2xl font-semibold text-gray-100 mb-2">Experience Not Found</h2>
-                <p className="text-gray-400">The interview experience you're looking for might have been removed or doesn't exist.</p>
+                <p className="text-gray-400">The interview experience you are looking for might have been removed or does not exist.</p>
             </div>
         );
     }
