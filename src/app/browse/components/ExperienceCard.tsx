@@ -1,75 +1,81 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 interface ExperienceCardProps {
     id?: string;
     title?: string;
-    company: string;
+    company?: string;
     postedDate?: string;
     summary?: string;
     tags?: string[];
-    rounds?: string[]; // you can replace `any` with `Round[]` if you have it typed
+    rounds?: string[];
     name?: string;
-    outcome?: "selected" | "rejected" | "pending";
+    outcome?: "selected" | "rejected" | "pending" | string;
     currRole?: string;
     difficultyLevel?: string;
-    upvote?: number;
+
+    // upvote?: number;
 }
 
 function capitalizeFirst(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
 }
 
-export default function ExperienceCard({ id, title, tags, summary, upvote, name, currRole, difficultyLevel, outcome }: ExperienceCardProps) {
-    const router = useRouter();
-    function getOutcomeColor(outcome: string) {
-        const value = outcome.toLowerCase();
-        if (value === "selected" || value === "offer received") return "bg-green-500";
-        if (value === "rejected" || value === "not-selected") return "bg-red-500";
-        return "bg-yellow-400";
-    }
+function getOutcomeColor(outcome: string) {
+    const value = outcome.toLowerCase();
+    if (value === "selected" || value === "offer received") return "bg-green-500";
+    if (value === "rejected" || value === "not-selected") return "bg-red-500";
+    return "bg-yellow-400";
+}
+
+export default function ExperienceCard({ id, title, tags, summary, name, currRole, difficultyLevel, outcome }: ExperienceCardProps) {
+    // Precompute formatted values
+
+    const outcomeBadge = useMemo(() => {
+        if (!outcome) return null;
+        return <span className={`px-2 py-1 rounded text-xs text-white font-semibold ${getOutcomeColor(outcome)}`}>{capitalizeFirst(outcome)}</span>;
+    }, [outcome]);
 
     return (
-        <div className="bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition shadow-sm cursor-pointer">
-            {/* Title & Subtitle */}
-            <h3 className="font-semibold text-lg text-white mb-1">{title}</h3>
-            {/* <p className="text-sm text-gray-400 mb-2">{subtitle}</p> */}
+        // <div className="bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition-colors shadow-sm ">
+        <div className={`bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition-colors shadow-sm`}>
+            {/* Title */}
+            <h3 className="font-semibold text-lg text-white mb-2 truncate">{title || "Untitled Experience"}</h3>
 
-            {/* Metadata Row */}
-            <div className="flex flex-wrap gap-4 text-xs text-gray-300 font-medium mb-3">
+            {/* Metadata */}
+            <div className="flex flex-wrap gap-3 text-xs text-gray-300 font-medium mb-3">
                 {name && <span>🙍 {name}</span>}
                 {currRole && <span>💼 {capitalizeFirst(currRole)}</span>}
                 {difficultyLevel && <span>💡 {capitalizeFirst(difficultyLevel)}</span>}
-                {outcome && <span className={`px-2 py-1 rounded text-xs text-white font-semibold ${getOutcomeColor(outcome)}`}> {capitalizeFirst(outcome)}</span>}
+                {outcomeBadge}
             </div>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-3">
-                {tags?.map((tag, i) => (
-                    <span key={i} className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-200">
-                        {capitalizeFirst(tag)}
-                    </span>
-                ))}
-            </div>
+            {tags?.length ? (
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {tags.map((tag, i) => (
+                        <span key={i} className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-200">
+                            {capitalizeFirst(tag)}
+                        </span>
+                    ))}
+                </div>
+            ) : null}
 
             {/* Summary */}
-            <p className="text-sm text-gray-300 mb-4 line-clamp-3">{summary}</p>
+            {summary && <p className="text-sm text-gray-300 mb-4 line-clamp-3">{summary}</p>}
 
             {/* Footer */}
-            <div className="flex justify-between  items-center text-xs text-gray-400">
-                <span className="bold">👍 {upvote}</span>
-                <Link
-                    href="#"
-                    className="text-blue-400 hover:underline"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        router.push(`/experience/${id}`);
-                    }}
-                >
-                    Read More →
-                </Link>
+            <div className="flex justify-between items-center text-xs text-gray-400">
+                {/* <span>👍 {upvote}</span> */}
+                {id ? (
+                    <Link href={`/experience/${id}`} className="text-blue-400 hover:underline">
+                        Read More →
+                    </Link>
+                ) : (
+                    <span className="text-gray-500">No Details</span>
+                )}
             </div>
         </div>
     );

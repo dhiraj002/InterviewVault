@@ -1,79 +1,116 @@
 "use client";
 
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
 
-const DEBOUNCE_DELAY = 500;
+const DEFAULT_FILTERS = {
+    searchText: "",
+    industry: "All",
+    outcome: "all",
+};
 
 export default function FilterSidebar() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [searchText, setSearchText] = useState("");
-    const [industry, setIndustry] = useState("All");
-    const [outcome, setOutcome] = useState("all");
+    const [filters, setFilters] = useState(DEFAULT_FILTERS);
+    const mountedRef = useRef(false);
+    const debounceRef = useRef<number | null>(null);
 
-    const currentParamsString = searchParams.toString();
+    // Initialize from URL only once
+    useEffect(() => {
+        const init = {
+            searchText: searchParams.get("search") || "",
+            industry: searchParams.get("industry") || "All",
+            outcome: searchParams.get("outcome") || "all",
+        };
+        setFilters(init);
+        mountedRef.current = true;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    // Helper to update URL params
-    const updateParams = useCallback(
-        (key: string, value: string, removeIfDefault = false, defaultValue = "") => {
+    const applyFiltersToUrl = useCallback(
+        (nextFilters: typeof DEFAULT_FILTERS) => {
             const params = new URLSearchParams(searchParams.toString());
 
-            if (removeIfDefault && value === defaultValue) {
-                params.delete(key);
-            } else {
-                params.set(key, value);
+            // Apply filters
+            if (nextFilters.searchText) params.set("search", nextFilters.searchText);
+            else params.delete("search");
+
+            if (nextFilters.industry && nextFilters.industry !== "All") params.set("industry", nextFilters.industry);
+            else params.delete("industry");
+
+            if (nextFilters.outcome && nextFilters.outcome !== "all") params.set("outcome", nextFilters.outcome);
+            else params.delete("outcome");
+
+            // If any filter actually changed → reset to page 1
+            const oldFilters = {
+                searchText: searchParams.get("search") || "",
+                industry: searchParams.get("industry") || "All",
+                outcome: searchParams.get("outcome") || "all",
+            };
+
+            const filterChanged = oldFilters.searchText !== nextFilters.searchText || oldFilters.industry !== nextFilters.industry || oldFilters.outcome !== nextFilters.outcome;
+
+            if (filterChanged) {
+                params.set("page", "1");
             }
 
-            params.set("page", "1"); // reset page
-            router.push(`/browse?${params.toString()}`);
+            router.replace(`/browse?${params.toString()}`, { scroll: false });
         },
-        [router, searchParams]
+        [searchParams, router]
     );
 
-    // On mount, sync state with URL
+    // Debounce search
     useEffect(() => {
-        setSearchText(searchParams.get("search") || "");
-        setIndustry(searchParams.get("industry") || "All");
-        setOutcome(searchParams.get("outcome") || "all");
-    }, [currentParamsString, searchParams]);
+        if (!mountedRef.current) return;
+        if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    // Debounced search input handling
+        debounceRef.current = window.setTimeout(() => {
+            applyFiltersToUrl(filters);
+        }, 350);
+
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
+    }, [filters.searchText, applyFiltersToUrl, filters]);
+
+    // Immediate apply for industry/outcome
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            updateParams("search", searchText, true, "");
-        }, DEBOUNCE_DELAY);
+        if (!mountedRef.current) return;
+        applyFiltersToUrl(filters);
+    }, [filters.industry, filters.outcome, applyFiltersToUrl, filters]);
 
-        return () => clearTimeout(timeout);
-    }, [searchText, updateParams]);
-
-    useEffect(() => {
-        updateParams("industry", industry, true, "All");
-    }, [industry, updateParams]);
-
-    useEffect(() => {
-        updateParams("outcome", outcome, true, "all");
-    }, [outcome, updateParams]);
+    const handleChange = (key: keyof typeof DEFAULT_FILTERS, value: string) => {
+        setFilters((prev) => ({ ...prev, [key]: value }));
+    };
 
     const clearFilters = () => {
-        router.push("/browse");
+        const isAlreadyDefault = filters.searchText === DEFAULT_FILTERS.searchText && filters.industry === DEFAULT_FILTERS.industry && filters.outcome === DEFAULT_FILTERS.outcome;
+
+        if (isAlreadyDefault) return; // ✅ prevent unnecessary reset
+
+        setFilters(DEFAULT_FILTERS);
+        applyFiltersToUrl(DEFAULT_FILTERS);
+
+        // setFilters(DEFAULT_FILTERS);
+        // applyFiltersToUrl(DEFAULT_FILTERS);
     };
 
     return (
         <aside className="space-y-6">
             <input
-                type="text"
+                aria-label="Search experiences"
                 placeholder="Search company, exam, role..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
+                value={filters.searchText}
+                onChange={(e) => handleChange("searchText", e.target.value)}
                 className="w-full bg-[#161b22] border border-gray-700 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
 
             <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Industry</label>
-                    <select value={industry} onChange={(e) => setIndustry(e.target.value)} className="w-full bg-[#161b22] border border-gray-700 rounded-md px-3 py-2 text-sm">
+                    <select value={filters.industry} onChange={(e) => handleChange("industry", e.target.value)} className="w-full bg-[#161b22] border border-gray-700 rounded-md px-3 py-2 text-sm">
                         <option>All</option>
                         <option value="private">Corporate / Private</option>
                         <option value="competitive">Competitive Exams</option>
@@ -83,7 +120,7 @@ export default function FilterSidebar() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Outcome</label>
-                    <select value={outcome} onChange={(e) => setOutcome(e.target.value)} className="w-full bg-[#161b22] border border-gray-700 rounded-md px-3 py-2 text-sm">
+                    <select value={filters.outcome} onChange={(e) => handleChange("outcome", e.target.value)} className="w-full bg-[#161b22] border border-gray-700 rounded-md px-3 py-2 text-sm">
                         <option value="all">All</option>
                         <option value="selected">Selected</option>
                         <option value="rejected">Rejected</option>
@@ -91,7 +128,7 @@ export default function FilterSidebar() {
                 </div>
             </div>
 
-            <button onClick={clearFilters} className="w-full bg-red-500 hover:bg-red-700 text-white font-medium py-2 rounded-md transition">
+            <button onClick={clearFilters} className="w-full bg-red-500 hover:bg-red-700 text-white font-medium py-2 rounded-md transition-colors duration-200">
                 Clear Filters
             </button>
         </aside>
