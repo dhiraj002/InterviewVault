@@ -140,4 +140,20 @@ const experienceSchema = new Schema<ExperienceDocument>(
     { timestamps: true }
 );
 
+// ✅ Better indexes
+experienceSchema.index({ interviewCategory: 1, outcome: 1, createdAt: -1 });
+experienceSchema.index({ company: 1 });
+experienceSchema.index({ position: 1 });
+experienceSchema.index({ examName: 1 });
+
+// ✅ Full-text search index (optimized)
+experienceSchema.index({
+    position: "text",
+    company: "text",
+    examName: "text",
+    currentRole: "text",
+    additionalNotes: "text",
+    surprisingAspects: "text",
+});
+
 export default models.Experience || mongoose.model("Experience", experienceSchema);
