@@ -21,7 +21,7 @@ export default function LogoutButton() {
     };
 
     return (
-        <button onClick={handleLogout} disabled={isPending} className="text-white hover:text-red-500 font-medium transition">
+        <button onClick={handleLogout} disabled={isPending} className="text-white hover:text-red-500 font-medium transition cursor-pointer">
             {isPending ? "Logging out..." : "Logout"}
         </button>
     );
