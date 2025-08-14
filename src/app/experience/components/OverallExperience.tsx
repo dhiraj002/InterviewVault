@@ -5,9 +5,10 @@ import React from "react";
 interface Props {
     preprationTips: string;
     generalAdvice: string;
+    surprisingAspects?: string;
 }
 
-export default function OverallExperience({ preprationTips, generalAdvice }: Props) {
+export default function OverallExperience({ preprationTips, generalAdvice, surprisingAspects }: Props) {
     return (
         <section className="w-full bg-[#0d1117] text-white rounded-xl border border-gray-800 shadow-lg p-5 md:p-8 space-y-6 mt-6">
             <h2 className="text-2xl md:text-2xl font-semibold">Overall Experience</h2>
@@ -27,9 +28,17 @@ export default function OverallExperience({ preprationTips, generalAdvice }: Pro
             </div>
             {/* General Advice */}
             <div>
-                <h3 className="text-lg md:text-xl font-semibold mb-2 text-white">General advice</h3>
+                <h3 className="text-lg md:text-xl font-semibold mb-2 text-white">General Advice</h3>
                 <div className="list-disc list-inside space-y-2 text-gray-300 text-sm md:text-base leading-relaxed">{generalAdvice}</div>
             </div>
+
+            {/* Suprising Questions */}
+            {surprisingAspects && (
+                <div>
+                    <h3 className="text-lg md:text-xl font-semibold mb-2 text-white">Surprising Questions</h3>
+                    <div className="list-disc list-inside space-y-2 text-gray-300 text-sm md:text-base leading-relaxed">{surprisingAspects}</div>
+                </div>
+            )}
         </section>
     );
 }

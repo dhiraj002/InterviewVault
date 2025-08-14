@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDb from "@/lib/dbConnect";
 import ExperienceModel from "@/model/shareExperience";
 
-const PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 10; // ✅ Larger default for production
+const MAX_PAGE_SIZE = 50; // ✅ Safety limit
 
 const industryToInterviewCategoryMap: Record<string, string> = {
     private: "corporate",
@@ -10,34 +11,39 @@ const industryToInterviewCategoryMap: Record<string, string> = {
     competitive: "competitive-exam",
 };
 
+// ✅ Predefine fields to return for performance
+const EXPERIENCE_FIELDS = "position company examName createdAt additionalNotes interviewTypes rounds name outcome currentRole difficultyLevel upvotes";
+
 export async function GET(req: NextRequest) {
     try {
-        // ✅ Connect to MongoDB only once
-        await connectDb();
+        await connectDb(); // ✅ Cached connection
 
         const { searchParams } = new URL(req.url);
 
-        // 🔢 Pagination & Search
-        const page = parseInt(searchParams.get("page") || "1", 10);
-        const search = searchParams.get("search") || "";
+        // 🔢 Pagination
+        const page = Math.max(parseInt(searchParams.get("page") || "1", 10), 1);
+        const pageSize = Math.min(Math.max(parseInt(searchParams.get("limit") || DEFAULT_PAGE_SIZE.toString(), 10), 1), MAX_PAGE_SIZE);
 
-        // const query: any = {};
-        const query: Record<string, unknown> = {};
+        // 🔍 Search
+        const search = searchParams.get("search")?.trim() || "";
+        // const query: Record<string, any> = {};
+        // const query: Record<string, string | number | boolean | any> = {};
+        const query: { [key: string]: unknown } = {};
 
-        // 🔍 Text Search (multi-field)
-        if (search.trim()) {
-            const searchableFields = ["position", "company", "examName", "currentRole", "examStages", "industryType", "interviewCategory"];
+        if (search) {
+            // ✅ Use $text only if index exists, fallback to regex
+            const indexes = await ExperienceModel.collection.indexes();
+            const hasTextIndex = indexes.some((idx) => Object.keys(idx.key).some((k) => idx.key[k] === "text"));
 
-            query.$or = searchableFields.map((field) => ({
-                [field]: { $regex: search, $options: "i" }, // Case-insensitive partial match
-            }));
+            if (hasTextIndex) {
+                query.$text = { $search: search };
+            } else {
+                query.$or = [{ position: { $regex: search, $options: "i" } }, { company: { $regex: search, $options: "i" } }, { examName: { $regex: search, $options: "i" } }, { additionalNotes: { $regex: search, $options: "i" } }];
+            }
         }
 
-        // 🧠 Filters (dropdowns)
-        const filterableFields = [
-            "outcome", // selected / rejected
-        ];
-
+        // 🧠 Filters
+        const filterableFields = ["outcome"];
         for (const field of filterableFields) {
             const value = searchParams.get(field);
             if (value && value !== "all") {
@@ -45,31 +51,30 @@ export async function GET(req: NextRequest) {
             }
         }
 
+        // 🏭 Industry mapping
         const industryParam = searchParams.get("industry");
-
         if (industryParam && industryParam !== "all") {
             const mappedCategory = industryToInterviewCategoryMap[industryParam];
-            if (mappedCategory) {
-                query.interviewCategory = mappedCategory; // ✅ Apply this instead of industry
-            }
+            if (mappedCategory) query.interviewCategory = mappedCategory;
         }
 
-        console.log("🔎 Final Mongo Query:", query);
+        // ✅ Run queries in parallel
+        const [total, experiences] = await Promise.all([
+            ExperienceModel.countDocuments(query),
+            ExperienceModel.find(query)
+                .sort({ createdAt: -1 }) // ✅ Make sure createdAt is indexed
+                .skip((page - 1) * pageSize)
+                .limit(pageSize)
+                .select(EXPERIENCE_FIELDS)
+                .lean(),
+        ]);
 
-        // 📦 Fetch paginated and sorted results
-        const total = await ExperienceModel.countDocuments(query);
-
-        const experiences = await ExperienceModel.find(query)
-            .sort({ createdAt: -1 }) // Newest first
-            .skip((page - 1) * PAGE_SIZE)
-            .limit(PAGE_SIZE)
-            .lean(); // ⚡️ Faster, no Mongoose document overhead
-
+        // 📝 Format results for frontend
         const formatted = experiences.map((exp) => ({
-            id: exp._id as string,
+            id: typeof exp._id === "string" ? exp._id : String(exp._id),
             title: `${exp.position || "Untitled"} - ${exp.company || exp.examName || "Unknown"}`,
             company: exp.company || exp.examName || "Unknown",
-            postedDate: `Posted ${new Date(exp.createdAt).toDateString()}`,
+            postedDate: new Date(exp.createdAt).toDateString(),
             summary: exp.additionalNotes,
             tags: exp.interviewTypes || [],
             rounds: exp.rounds || [],
@@ -77,19 +82,19 @@ export async function GET(req: NextRequest) {
             outcome: exp.outcome,
             currRole: exp.currentRole,
             difficultyLevel: exp.difficultyLevel,
-            upvote: exp.upvotes || 0,
+            //upvote: exp.upvotes || 0,
         }));
 
         return NextResponse.json({
             experiences: formatted,
             pagination: {
                 page,
-                totalPages: Math.ceil(total / PAGE_SIZE),
+                totalPages: Math.ceil(total / pageSize),
                 total,
             },
         });
     } catch (error) {
         console.error("❌ API Error:", error);
-        return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
