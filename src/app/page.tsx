@@ -162,7 +162,7 @@ export const metadata = {
 
 export default function HomePage() {
     return (
-        <main className="bg-[#0d1117] min-h-screen">
+        <main className="bg-[#0d1117] ">
             <AnimatedHome />
         </main>
     );
