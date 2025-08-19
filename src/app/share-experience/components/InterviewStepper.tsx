@@ -26,9 +26,11 @@ interface InterviewStepperProps {
     initialExperience?: FormData;
     isEdit?: boolean;
     expId?: string;
+    isAdmin?: boolean;
+    isAdminButUser?: boolean;
 }
 
-export function InterviewStepper({ session, initialExperience, isEdit, expId }: InterviewStepperProps) {
+export function InterviewStepper({ session, initialExperience, isEdit, expId, isAdmin, isAdminButUser }: InterviewStepperProps) {
     const router = useRouter();
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -396,7 +398,7 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId }: 
     return (
         <div className="max-w-4xl mx-auto min-h-0">
             <div className="bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden flex flex-col max-h-screen">
-                <PostingPreferenceModal open={showPrefModal} onClose={() => handleClose()} onSelect={handlePrefSelect} />
+                {(!isAdmin || isAdminButUser) && <PostingPreferenceModal open={showPrefModal} onClose={() => handleClose()} onSelect={handlePrefSelect} />}
 
                 {/* Progress Bar */}
                 <ProgressBar progress={progress} />

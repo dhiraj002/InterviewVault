@@ -41,6 +41,21 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 
     try {
         const { id } = await params;
+
+        // 1. Find the experience first
+        const experience = await Experience.findById(id);
+        if (!experience) {
+            return NextResponse.json({ error: "Experience not found" }, { status: 404 });
+        }
+
+        // 2. Check ownership or admin
+        const userId = session.user.id; // make sure your session has user.id stored
+        const isAdmin = session.user.isAdmin; // also add this in your session if needed
+
+        // Ownership or admin check
+        if (experience.user.toString() !== userId && !isAdmin) {
+            return NextResponse.json({ message: "Access denied. Only the owner or an admin can edit this experience." }, { status: 403 });
+        }
         const body = await req.json();
         const updated = await Experience.findByIdAndUpdate(id, { $set: body }, { new: true });
 
