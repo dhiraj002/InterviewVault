@@ -34,6 +34,8 @@ export default function DashboardClient({ initialItems }: Props) {
                     <div>
                         <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
                         <p className="text-gray-400">Manage your interview experiences</p>
+
+                        <p className="border-l-4 border-blue-500 pl-3 text-gray-300 text-sm mt-3 mb-3">🚀 Once submitted, your experience will be reviewed by our admin team and published shortly.</p>
                     </div>
                     <button onClick={() => router.push("/share-experience")} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 w-fit">
                         <Share2 className="h-4 w-4" />
