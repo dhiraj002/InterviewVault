@@ -37,7 +37,10 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId, is
 
     const [formData, setFormData] = useState<FormData>(() => {
         return isEdit && initialExperience
-            ? initialExperience
+            ? {
+                  ...initialExperience,
+                  status: "pending", // ✅ always override to pending
+              }
             : {
                   interviewCategory: "",
                   examType: "",
