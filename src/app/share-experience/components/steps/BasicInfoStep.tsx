@@ -86,7 +86,8 @@ export function BasicInfoStep({ formData, updateFormData, errors }: BasicInfoSte
 
             {!formData?.anonymous ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputFieldFixed label="Your Name" value={formData.name ?? ""} icon={User} required />
+                    <InputField label="Your Name" value={formData.name ?? ""} icon={User} required onChange={(value) => updateFormData("name", value)} />
+
                     <InputFieldFixed label="Your Email" value={formData.email ?? ""} icon={Mail} required type="email" />
                     <InputField label="Linkedin Profile" value={formData.linkedInProfile ?? ""} onChange={(value) => updateFormData("linkedInProfile", value)} placeholder=" https://www.linkedin.com/in/" />
                 </div>
