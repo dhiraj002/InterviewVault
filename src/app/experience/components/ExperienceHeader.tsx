@@ -74,6 +74,12 @@ export default function ExperienceHeader({ data }: ExperienceHeaderProps) {
                     <span className="text-white">{capitalizeFirst(data.mode)}</span>
                 </div>
 
+                <div className="flex items-center gap-2">
+                    <Building2 className="w-4 h-4 text-gray-400" />
+                    <span className="text-gray-400">Application Soure:</span>
+                    <span className="text-white">{capitalizeFirst(data.applicationSource)}</span>
+                </div>
+
                 {data?.salary && (
                     <div className="flex items-center gap-2">
                         <Trophy className="w-4 h-4 text-gray-400" />
