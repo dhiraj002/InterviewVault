@@ -28,17 +28,17 @@ export const metadata: Metadata = {
 
 export default function Browse() {
     return (
-        <Suspense>
-            <main className="bg-[#0d1117] min-h-screen py-12 px-4 text-gray-200">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
-                    <FilterSidebar />
+        <main className="bg-[#0d1117] min-h-screen py-12 px-4 text-gray-200">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
+                <FilterSidebar />
 
-                    <section>
+                <section>
+                    <Suspense fallback={<p className="text-gray-400">Loading experiences...</p>}>
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> */}
                         <ExperiencesList />
-                    </section>
-                </div>
-            </main>
-        </Suspense>
+                    </Suspense>
+                </section>
+            </div>
+        </main>
     );
 }
