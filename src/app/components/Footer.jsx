@@ -38,9 +38,14 @@ export default function Footer() {
                         Have questions or feedback?
                         <br />
                         Email us at:{" "}
-                        <Link href="mailto:dhirajdhiman15@gmail.com" className="text-blue-400 hover:underline">
-                            dhirajdhiman15@gmail.com
-                        </Link>
+                        <div className="flex flex-col space-y-1 mt-1">
+                            <Link href="mailto:dhirajdhiman15@gmail.com" className="text-blue-400 hover:underline">
+                                dhirajdhiman15@gmail.com
+                            </Link>
+                            <Link href="mailto:nsnishant5930@gmail.com" className="text-blue-400 hover:underline">
+                                nsnishant5930@gmail.com
+                            </Link>
+                        </div>
                     </p>
                     <div className="flex space-x-4 mt-4">
                         <Link href="https://linkedin.com/in/dhiraj-dhiman02" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
