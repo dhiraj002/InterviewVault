@@ -1,5 +1,4 @@
 // app/browse/page.tsx
-"use client";
 
 import FilterSidebar from "./components/FilterSidebar";
 import ExperiencesList from "./components/ExperiencesList";
@@ -18,6 +17,14 @@ import { Suspense } from "react";
 //     difficultyLevel?: string;
 //     // upvote?: number;
 // }
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Browse Interview Experiences | InterviewVault",
+    description: "Explore real interview experiences from candidates across top companies and government exams. Search, filter, and learn strategies to crack your next interview.",
+    keywords: ["interview experiences", "job interviews", "interview preparation", "interview questions", "Google interview experience", "FAANG interviews", "government exam interviews", "mock interviews"],
+};
 
 export default function Browse() {
     return (
