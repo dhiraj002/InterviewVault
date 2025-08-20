@@ -60,6 +60,7 @@ export default function ExperiencesTable() {
     const [experiences, setExperiences] = useState<Experience[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         async function fetchExperiences() {
@@ -67,7 +68,6 @@ export default function ExperiencesTable() {
                 const res = await fetch("/api/admin/experiences"); // You’ll create this API route
                 if (!res.ok) throw new Error("Failed to fetch experiences");
                 const data = await res.json();
-                console.log("Fetched experiences:", data);
                 setExperiences(data.formattedExperiences || []);
             } catch (err) {
                 setError((err as Error).message);
@@ -82,8 +82,6 @@ export default function ExperiencesTable() {
     if (error) return <p className="text-red-500">Error: {error}</p>;
 
     const onDelete = async (id: string) => {
-        console.log("Delete experience with ID:", id);
-
         try {
             const res = await fetch(`/api/share-experience/${id}`, {
                 method: "DELETE",
@@ -106,14 +104,12 @@ export default function ExperiencesTable() {
     };
 
     const onEdit = (item: Experience) => {
-        console.log("Edit experience:", item);
         if (item.id) {
             router.push(`/share-experience/${item.id}`);
         }
     };
 
     const onView = (id: string) => {
-        console.log("View experience:", id);
         router.push(`/experience/${id}`);
     };
 
@@ -138,58 +134,81 @@ export default function ExperiencesTable() {
         toast.success("Experience hidden successfully!");
     };
 
+    // 🔎 filter experiences by search term
+    const filteredExperiences = experiences.filter((item) => {
+        const search = searchTerm.toLowerCase();
+        return (
+            item.title.toLowerCase().includes(search) || item.company.toLowerCase().includes(search) || item.name.toLowerCase().includes(search) || getTypeLabel(item.type).toLowerCase().includes(search) || item.status.toLowerCase().includes(search)
+        );
+    });
+
     return (
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 ">
-            {/* Desktop Table */}
-            <div className="hidden md:block ">
-                <table className="w-full text-sm text-gray-300">
-                    <thead>
-                        <tr className="bg-gray-800 border-b border-gray-700">
-                            {["Title", "Status", "Name", "Type", "Date", ""].map((heading) => (
-                                <th key={heading} scope="col" className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
-                                    {heading}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-700">
-                        {experiences.map((item) => (
-                            <tr key={item.id} className="hover:bg-gray-800/70 transition">
-                                <td className="px-4 py-3 text-white font-medium">{item.title}</td>
-                                <td className="px-4 py-3">
-                                    <Status status={item.status} />
-                                </td>
-                                <td className="px-4 py-3 text-white">{item.name}</td>
-                                <td className="px-4 py-3">{getTypeLabel(item.type)}</td>
-                                <td className="px-4 py-3 text-gray-400">{formatDate(item.date)}</td>
-                                <td className="px-4 py-3">
-                                    <Actions onEdit={() => onEdit(item)} onDelete={() => onDelete(item.id)} onView={() => onView(item.id)} handleApproveExp={() => handleApproveExp(item.id)} handleHideExp={() => handleHideExp(item.id)} />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+        <>
+            <div className="flex justify-center mb-4">
+                <input
+                    type="text"
+                    placeholder="Search Experience..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        // setCurrentPage(1); // reset page
+                    }}
+                    className="w-full md:w-1/3 px-4 py-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
             </div>
 
-            {/* Mobile Cards */}
-            <div className="md:hidden divide-y divide-gray-700">
-                {experiences.map((item) => (
-                    <div key={item.id} className="p-4">
-                        <div className="flex justify-between items-start">
-                            <h3 className="text-white font-semibold">{item.title}</h3>
-                            <Actions onEdit={() => onEdit(item)} onDelete={() => onDelete(item.id)} onView={() => onView(item.id)} handleApproveExp={() => handleApproveExp(item.id)} handleHideExp={() => handleHideExp(item.id)} />
-                        </div>
-                        <div className="mt-2 space-y-1 text-sm">
-                            <div className="flex justify-between items-center">
-                                <Status status={item.status} />
-                                <span className="text-gray-400">{getTypeLabel(item.type)}</span>
+            <div className="bg-gray-800/50 rounded-lg border border-gray-700 ">
+                {/* Desktop Table */}
+                <div className="hidden md:block ">
+                    <table className="w-full text-sm text-gray-300">
+                        <thead>
+                            <tr className="bg-gray-800 border-b border-gray-700">
+                                {["Title", "Status", "Name", "Type", "Date", ""].map((heading) => (
+                                    <th key={heading} scope="col" className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                                        {heading}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-700">
+                            {filteredExperiences.map((item) => (
+                                <tr key={item.id} className="hover:bg-gray-800/70 transition">
+                                    <td className="px-4 py-3 text-white font-medium">{item.title}</td>
+                                    <td className="px-4 py-3">
+                                        <Status status={item.status} />
+                                    </td>
+                                    <td className="px-4 py-3 text-white">{item.name}</td>
+                                    <td className="px-4 py-3">{getTypeLabel(item.type)}</td>
+                                    <td className="px-4 py-3 text-gray-400">{formatDate(item.date)}</td>
+                                    <td className="px-4 py-3">
+                                        <Actions onEdit={() => onEdit(item)} onDelete={() => onDelete(item.id)} onView={() => onView(item.id)} handleApproveExp={() => handleApproveExp(item.id)} handleHideExp={() => handleHideExp(item.id)} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="md:hidden divide-y divide-gray-700">
+                    {filteredExperiences.map((item) => (
+                        <div key={item.id} className="p-4">
+                            <div className="flex justify-between items-start">
+                                <h3 className="text-white font-semibold">{item.title}</h3>
+                                <Actions onEdit={() => onEdit(item)} onDelete={() => onDelete(item.id)} onView={() => onView(item.id)} handleApproveExp={() => handleApproveExp(item.id)} handleHideExp={() => handleHideExp(item.id)} />
                             </div>
-                            <div className="text-white">{item.name}</div>
-                            <div className="text-gray-500">{formatDate(item.date)}</div>
+                            <div className="mt-2 space-y-1 text-sm">
+                                <div className="flex justify-between items-center">
+                                    <Status status={item.status} />
+                                    <span className="text-gray-400">{getTypeLabel(item.type)}</span>
+                                </div>
+                                <div className="text-white">{item.name}</div>
+                                <div className="text-gray-500">{formatDate(item.date)}</div>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
