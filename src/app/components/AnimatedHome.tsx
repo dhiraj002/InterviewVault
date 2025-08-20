@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Stats from "./Stats";
 
 export default function Hero() {
     // const [shouldAnimate, setShouldAnimate] = useState(true);
@@ -132,42 +133,7 @@ export default function Hero() {
 
             {/* Stats Section */}
             <section className="bg-black py-16 px-4 sm:px-6 lg:px-8 relative">
-                {/* Seamless section border gradient */}
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-
-                <div className="max-w-6xl mx-auto">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-                        className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 text-white"
-                    >
-                        Platform Statistics
-                    </motion.h2>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                        {[
-                            { value: "5K+", label: "Interview Experiences", color: "text-blue-400" },
-                            { value: "50+", label: "Exam Categories", color: "text-green-400" },
-                            { value: "25K+", label: "Active Users", color: "text-purple-400" },
-                            // { value: "95%", label: "Success Rate", color: "text-orange-400" },
-                        ].map((stat, i) => (
-                            <motion.div
-                                key={stat.label}
-                                custom={i}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-                                className="border border-gray-800 bg-gray-900/50 rounded-lg p-6 text-center backdrop-blur-sm hover:shadow-md hover:border-purple-500/30 transition-all duration-300"
-                            >
-                                <h3 className={`text-3xl sm:text-4xl font-bold ${stat.color}`}>{stat.value}</h3>
-                                <p className="text-gray-300 mt-2 text-sm sm:text-base">{stat.label}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
+                <Stats />
             </section>
 
             {/* Why Choose InterviewVault Section */}
@@ -192,7 +158,7 @@ export default function Hero() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                            className="text-center group hover:transform hover:-translate-y-2 transition-all duration-300 p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-blue-500/30 backdrop-blur-sm"
+                            className="text-center group hover:transform hover:-translate-y-2  p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-blue-500/30 backdrop-blur-sm"
                         >
                             <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 group-hover:border-blue-400/50 transition-colors duration-300">
                                 <span className="text-xl sm:text-2xl md:text-3xl">📝</span>
@@ -208,7 +174,7 @@ export default function Hero() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                            className="text-center group hover:transform hover:-translate-y-2 transition-all duration-300 p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-green-500/30 backdrop-blur-sm"
+                            className="text-center group hover:transform hover:-translate-y-2  p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-green-500/30 backdrop-blur-sm"
                         >
                             <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 group-hover:border-green-400/50 transition-colors duration-300">
                                 <span className="text-xl sm:text-2xl md:text-3xl">🔍</span>
@@ -224,7 +190,7 @@ export default function Hero() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                            className="text-center group hover:transform hover:-translate-y-2 transition-all duration-300 p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-purple-500/30 backdrop-blur-sm sm:col-span-2 lg:col-span-1"
+                            className="text-center group hover:transform hover:-translate-y-2  p-4 sm:p-6 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:border-purple-500/30 backdrop-blur-sm sm:col-span-2 lg:col-span-1"
                         >
                             <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 group-hover:border-purple-400/50 transition-colors duration-300">
                                 <span className="text-xl sm:text-2xl md:text-3xl">🤝</span>
