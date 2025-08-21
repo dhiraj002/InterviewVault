@@ -40,7 +40,7 @@ export default function ExperienceCard({ id, title, tags, summary, name, currRol
 
     return (
         // <div className="bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition-colors shadow-sm ">
-        <div className={`bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition-colors shadow-sm`}>
+        <div className={`bg-[#161b22] border border-gray-700 rounded-xl p-5 hover:border-blue-500 transition-colors shadow-sm h-full`}>
             {/* Title */}
             <h3 className="font-semibold text-lg text-white mb-2 truncate">{title || "Untitled Experience"}</h3>
 
