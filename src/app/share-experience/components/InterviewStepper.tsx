@@ -146,9 +146,17 @@ export function InterviewStepper({ session, initialExperience, isEdit, expId, is
                         if (round?.duration <= 0) newErrors[`round${index + 1}Duration`] = `Round ${index + 1} Duration must be greater than 0`;
                         if (round?.difficulty === "") newErrors[`round${index + 1}Difficulty`] = `Round ${index + 1} Difficulty is required`;
                         if (round?.questions?.length === 0) newErrors[`round${index + 1}Questions`] = `Round ${index + 1} Questions must be provided`;
-                        if (round?.questions?.some((q) => !q.trim())) {
-                            newErrors[`round${index + 1}Questions`] = `Round ${index + 1} Questions must not be empty`;
+
+                        // if (round?.questions?.some((q) => !q.trim())) {
+                        //     newErrors[`round${index + 1}Questions`] = `Round ${index + 1} Questions must not be empty`;
+                        // }
+
+                        const cleanedQuestions = (round?.questions || []).map((q) => q.trim()).filter((q) => q !== "");
+
+                        if (cleanedQuestions.length === 0) {
+                            newErrors[`round${index + 1}Questions`] = `Round ${index + 1} Questions must be provided`;
                         }
+
                         if (round?.outcome == "") newErrors[`round${index + 1}Outcome`] = `Round ${index + 1} Select an outcome`;
                     });
 
